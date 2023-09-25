@@ -1,10 +1,14 @@
 import React from 'react'
 import { Form, Input } from 'antd'
+import TextField from '@mui/material/TextField';
+
 
 export const Inputs = (props: any) => {
     return (<>
 
-        <Form.Item
+        {/*         
+           <Form.Item
+            name={props.nam}
             label={props.holder}
             className={props.class}
             rules={[
@@ -12,12 +16,29 @@ export const Inputs = (props: any) => {
             ]}
         >
             <Input
-                name={props.nam}
-                value={props.value}
-                onChange={props.change}
-                onBlur={props.blur}
                 placeholder={`Enter ${props.holder}`}
                 type={props.typs} />
+        </Form.Item>
+     */}
+        <Form.Item
+            name={props.nam}
+
+            className={props.class}
+            rules={[
+                { required: true, message: `Please input your ${props.holder}!` },
+            ]}
+        >
+            {/* <Input
+
+                placeholder={`Enter ${props.holder}`}
+            /> */}
+
+            <TextField style={props.style}
+                onChange={props.change}
+                onBlur={props.blur}
+                type={props.typs}
+                fullWidth sx={{ m: 1 }}
+                id="standard-basic" label={props.holder} variant="standard" />
         </Form.Item>
     </>
     )

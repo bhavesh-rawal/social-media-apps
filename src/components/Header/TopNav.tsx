@@ -3,10 +3,11 @@ import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 const Top_Navbar = (props: any) => {
+ 
   return (
     <>
-      <Navbar expand="lg" className="bg-body-tertiary bg-dark mb-5">
-        <Container>
+      <Navbar sticky="top" expand="lg" data-bs-theme="dark" className="bg-body-tertiary bg-dark">
+      <Container fluid>
           <Link className='text-decoration-none' to="/">
             <Navbar.Brand>Home</Navbar.Brand>
           </Link>
@@ -16,11 +17,12 @@ const Top_Navbar = (props: any) => {
               {
                 props.Navs.map((i: any, indx: number) => (
                   <>
-                    <Link className='text-dark text-decoration-none mx-2' to={i.nav} key={indx}>{i.titls}</Link>
+                    <Link className='text-decoration-none mx-2' to={i.nav} key={indx}>{i.titls}</Link>
                   </>
                 ))
               }
             </Nav>
+           
           </Navbar.Collapse>
         </Container>
       </Navbar>
