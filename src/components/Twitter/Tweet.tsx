@@ -1,6 +1,6 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { postTweet } from '../../Redux/Slice_Posts';
+import { useDispatch } from 'react-redux';
+import { TwitterTweet } from '../../Redux/Slice_Posts';
 import { Inputs } from '../Forms-Items/Inputs';
 import { Row } from 'react-bootstrap'
 import { Card, Form } from 'antd';
@@ -11,9 +11,8 @@ const Tweet = () => {
     const dispatch = useDispatch<any>()
 
     const onFinishTW = (values: any) => {
-        const value = { ...values }
-        dispatch(postTweet(value))
-        form.resetFields()
+        dispatch(TwitterTweet(values))
+        // form.resetFields()
     };
     return (
         <>
@@ -21,8 +20,7 @@ const Tweet = () => {
                 hoverable
                 title="Twitter Post Tweet"
                 bordered={false}
-                style={{ width: '40rem' }}
-                className='card-gradientTW'
+                className='card-gradientTW col-5'
             >
                 <Form
                     form={form}
@@ -31,7 +29,9 @@ const Tweet = () => {
                     scrollToFirstError
                 >
                     <Row>
-                        <Inputs class="col-6" holder="Tweet" nam="tweet" typs="text" />
+                        <Inputs class="col-12" holder="Api Key" nam="Api_Key" typs="text" />
+                        <Inputs class="col-12" holder="Api Secret Key" nam="Api_Secret_Key" typs="text" />
+                        <Inputs class="col-12" holder="Tweet" nam="tweetText" typs="text" />
                         <Form.Item className='d-block w-100'>
                             <ButtonCreative title="Upload Tweet" type='submit' />
                         </Form.Item>

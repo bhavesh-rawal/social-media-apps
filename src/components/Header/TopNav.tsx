@@ -16,7 +16,7 @@ const Top_Navbar = (props: any) => {
           <Link className='text-decoration-none' to="/">
             <Navbar.Brand>Home</Navbar.Brand>
           </Link>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Toggle aria-controls="basic-navbar-nav" className='toggle-button'/>
           <Navbar.Collapse id="basic-navbar-nav" >
             <Nav className="me-auto ">
               {

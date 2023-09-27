@@ -1,6 +1,7 @@
 import React from 'react'
 import '../../assets/Style/Button.css'
 import { CloudUploadOutlined } from '@ant-design/icons'
+import { FacebookProvider, LoginButton } from 'react-facebook';
 import { Input } from 'antd'
 
 export const ButtonCreative = (props: any) => {
@@ -26,5 +27,22 @@ export const UploadButton = (props: any) => {
             </span>
         </div>
     </>
+    )
+}
+
+
+export const ButtonFB = (props: any) => {
+    return (
+        <>
+            <FacebookProvider appId={'184681667978801'}>
+                <LoginButton
+                    scope="email"
+                    onSuccess={props.handleSuccess}
+                    onError={(err) => console.log(err)}
+                >
+                    Log in with Facebook
+                </LoginButton >
+            </FacebookProvider>
+        </>
     )
 }

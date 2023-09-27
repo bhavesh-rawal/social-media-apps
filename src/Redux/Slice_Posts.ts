@@ -70,11 +70,7 @@ export const InstaPostImage = createAsyncThunk(
         }
       );
 
-      Swal.fire(
-        "Post!",
-        "Your Photo Post SuccussFully!",
-        "success"
-      );
+      Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
 
       return Result;
     } catch (error) {
@@ -111,11 +107,7 @@ export const InstaPostVideo = createAsyncThunk(
       );
       console.log(publishResponse);
 
-      Swal.fire(
-        "Post!",
-        "Your Video Post SuccussFully!",
-        "success"
-      );
+      Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
       return publishResponse.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -123,46 +115,54 @@ export const InstaPostVideo = createAsyncThunk(
   }
 );
 
-export const postTweet = createAsyncThunk(
-  "InstaPostVideo",
+export const TwitterTweet = createAsyncThunk(
+  "TwitterTweet",
   async (data: any, { rejectWithValue }) => {
-    debugger;
     console.log(data);
     try {
-      const uploadResponse = await axios.post(
-        `https://api.twitter.com/2/tweets`,
-        {
-          text: data.tweet,
-          headers: {
-            Authorization: `OAuth 
-                    oauth_consumer_key="ArZ3xyitA5ma7w5pIIhGtYXMu",
-                     oauth_token="1703678112884809728-johJqJ9SsUCMUHjBdb2Chl3puZTMsM", 
-                     oauth_signature_method="HMAC-SHA1", oauth_timestamp="1695269067",
-                      oauth_nonce="vWwhtZ4Zl74", oauth_version="1.0",
-                       oauth_signature="BV2yzo72w%2B%2FLOVbvkbLOKYc5RDs%3D"`,
-            "Content-Type": "application/json",
-          },
+      const formData = new FormData();
+      formData.append("grant_type", "client_credentials");
 
-          /*/ OAuth oauth_consumer_key="ArZ3xyitA5ma7w5pIIhGtYXMu",
-                           oauth_token="1703678112884809728-johJqJ9SsUCMUHjBdb2Chl3puZTMsM",
-                            oauth_signature_method="HMAC-SHA1",
-                             oauth_timestamp="1695269067",
-                             oauth_nonce="vWwhtZ4Zl74",
-                              oauth_version="1.0",
-                              oauth_signature="BV2yzo72w%2B%2FLOVbvkbLOKYc5RDs%3D"*/
+      const response = await axios.post(
+        "https://api.twitter.com/oauth2/token",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          auth: {
+            username: data.Api_Key,
+            password: data.Api_Secret_Key,
+          },
         }
       );
 
-      console.log(uploadResponse);
+      const bearerToken = response.data.access_token;
+      console.log(response);
 
-      return uploadResponse.data;
+      const tweetResponse = await axios.post(
+        "https://api.twitter.com/2/tweets",
+        {
+          status: data.tweetText,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${bearerToken}`,
+          },
+        }
+      );
+
+      Swal.fire("Post!", "Your Tweet Post SuccussFully!", "success");
+      console.log(tweetResponse);
+
+      return tweetResponse.data;
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
 
-const userSlice = createSlice({
+const userSlice:any = createSlice({
   name: "users",
   initialState,
   reducers: {
@@ -184,11 +184,7 @@ const userSlice = createSlice({
         )
         .then((res) => {
           console.log(res);
-          Swal.fire(
-            "Post!",
-            "Your Photo Post SuccussFully!",
-            "success"
-          );
+          Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
         })
         .catch((err) => {
           console.log(err);
@@ -212,11 +208,7 @@ const userSlice = createSlice({
           }
         )
         .then((res) => {
-          Swal.fire(
-            "Post!",
-            "Your Video Post SuccussFully!",
-            "success"
-          );
+          Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
           console.log(res);
         })
         .catch((errr) => {
@@ -263,6 +255,20 @@ const userSlice = createSlice({
         state.loading = false;
       })
       .addCase(InstaPostVideo.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(TwitterTweet.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(TwitterTweet.fulfilled, (state, action) => {
+        // state.UserData.push(action.payload.data)
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(TwitterTweet.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

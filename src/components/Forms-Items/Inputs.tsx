@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input } from 'antd'
+import { Form } from 'antd'
 import TextField from '@mui/material/TextField';
 
 
@@ -18,7 +18,7 @@ export const Inputs = (props: any) => {
                 type={props.typs}
                 fullWidth sx={{ m: 1 }}
                 className='text-field'
-                id="standard-basic" label={props.holder} variant="standard" />
+                id="standard-basic" label={`Enter ${props.holder}`} variant="standard" />
         </Form.Item>
     </>
     )

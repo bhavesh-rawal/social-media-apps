@@ -9,7 +9,7 @@ const Facebook = () => {
     <>
       <div className='FB'>
         <Container >
-          <Row className='justify-content-between'>
+          <Row className='justify-content-between MB-Display'>
             <AccessToken />
 
             <Photots />

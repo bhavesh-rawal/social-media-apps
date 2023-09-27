@@ -7,7 +7,7 @@ const Instagram = () => {
     return (
         <>
             <div className='IG '>
-                <Container className='d-flex justify-content-between'>
+                <Container className='d-flex justify-content-between MB-Display'>
                     <Photos />
                     <Videos />
                 </Container >

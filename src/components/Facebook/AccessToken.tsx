@@ -3,9 +3,8 @@ import { Row } from 'react-bootstrap'
 import { Inputs } from '../Forms-Items/Inputs'
 import { useDispatch } from 'react-redux'
 import { ExtendToken } from '../../Redux/Slice_Posts'
-import { FacebookProvider, LoginButton } from 'react-facebook';
 import { Card, Form } from 'antd';
-import { ButtonCreative } from '../Forms-Items/Button'
+import { ButtonCreative, ButtonFB } from '../Forms-Items/Button'
 
 
 const AccessToken = () => {
@@ -43,19 +42,12 @@ const AccessToken = () => {
                         <Inputs class="col-12 " holder="Page ID" nam="Page_ID" typs="number" />
                         <Inputs class="col-12 " holder="Client ID" nam="Client_ID" typs="number" />
                         <Inputs class="col-12 " holder="Client Secret Code" nam="Client_Secret_Code" typs="text" />
-                        <Form.Item className='d-flex w-100'>
-                            <ButtonCreative title="Genrate" class='mx-4' type='submit' cl />
-                            <FacebookProvider appId={'184681667978801'}>
-                                <LoginButton
-                                    scope="email"
-                                    onSuccess={handleSuccess}
-                                    onError={(err) => console.log(err)}
-                                >
-                                    Log in with Facebook
-                                </LoginButton >
-                            </FacebookProvider>
+                        <Form.Item className='d-block w-100'>
+                            <ButtonCreative title="Genrate" class='' type='submit' />
                         </Form.Item>
-
+                        <div className='col-12'>
+                            <ButtonFB handleSuccess={handleSuccess} />
+                        </div>
                     </Row>
                 </Form>
 
