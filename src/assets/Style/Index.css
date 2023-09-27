@@ -90,7 +90,7 @@ button:hover {
     color: #ffffff !important;
 }
 
-.css-l4u8b9-MuiInputBase-root-MuiInput-root:before {
+.css-l4u8b9-MuiInputBase-root-MuiInput-root::before {
     border-bottom: 1px solid rgb(255 252 252 / 38%) !important;
 }
 
