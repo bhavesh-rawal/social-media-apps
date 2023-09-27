@@ -5,7 +5,6 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import './assets/Style/Index.css'
 import Facebook from './Pages/Facebook';
 import Instagram from './Pages/Instagram';
-import { Container } from 'react-bootstrap'
 import Twitter from './Pages/Twitter';
 function App() {
   return (
