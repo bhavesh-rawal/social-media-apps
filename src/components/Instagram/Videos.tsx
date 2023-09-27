@@ -4,7 +4,7 @@ import { InstaPostVideo } from '../../Redux/Slice_Posts';
 import { Inputs } from '../Forms-Items/Inputs';
 import { Row } from 'react-bootstrap'
 import { Card, Form } from 'antd';
-import ButtonCreative from '../Forms-Items/Button';
+import { ButtonCreative } from '../Forms-Items/Button';
 const Videos = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch<any>()
@@ -22,7 +22,7 @@ const Videos = () => {
                 hoverable
                 title="Instagram Post Videos"
                 bordered={false}
-                style={{ backgroundColor: "#894C8F", width: '40rem' }}
+                className='card-gradientIG text-white col-4'
             >
                 <Form
                     form={form}
@@ -31,11 +31,10 @@ const Videos = () => {
                     scrollToFirstError
                 >
                     <Row>
-                        <Inputs class="col-6" style={{ backgroundColor: "#894C8F" }} holder="Video URL" nam="Video_url" typs="url" />
-                        <Inputs class="col-6" style={{ backgroundColor: "#894C8F" }} holder="User ID" nam="user_id" typs="number" />
-                        <Inputs class="col-6" style={{ backgroundColor: "#894C8F" }} holder="Caption" nam="Instacaption" typs="text" />
+                        <Inputs class="col-12" holder="Video URL" nam="Video_url" typs="url" />
+                        <Inputs class="col-12" holder="Caption Videos" nam="Instacaption" typs="text" />
+                        <Inputs class="col-12" holder="User ID" nam="user_id" typs="number" />
                         <Form.Item className='d-block w-100'>
-                            {/* <button type="submit" className='btn btn-outline-light'>Upload Video on Instagram</button> */}
                             <ButtonCreative title="Upload Video" type='submit' />
                         </Form.Item>
                     </Row>

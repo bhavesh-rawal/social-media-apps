@@ -4,7 +4,7 @@ import { InstaPostImage } from '../../Redux/Slice_Posts';
 import { Inputs } from '../Forms-Items/Inputs';
 import { Row } from 'react-bootstrap'
 import { Card, Form } from 'antd';
-import ButtonCreative from '../Forms-Items/Button';
+import { ButtonCreative } from '../Forms-Items/Button';
 
 const Photos = () => {
     const [form] = Form.useForm();
@@ -22,7 +22,7 @@ const Photos = () => {
                 hoverable
                 title="Instagram Post Photos"
                 bordered={false}
-                style={{ backgroundColor: "#D290D0", width: '40rem' }}
+                className='card-gradientIG col-4'
             >
                 <Form
                     form={form}
@@ -31,13 +31,11 @@ const Photos = () => {
                     scrollToFirstError
                 >
                     <Row>
-                        <Inputs class="col-12" style={{ backgroundColor: "#D290D0" }} holder="User ID" nam="user_id" typs="number" />
-                        <Inputs class="col-12" style={{ backgroundColor: "#D290D0" }} holder="Caption" nam="Instacaption" typs="text" />
-                        <Inputs class="col-12" style={{ backgroundColor: "#D290D0" }} holder="Image URL" nam="InstaImage" typs="url" />
+                        <Inputs class="col-12" holder="Image URL" nam="InstaImage" typs="url" />
+                        <Inputs class="col-12" holder="Caption Photos" nam="Instacaption" typs="text" />
+                        <Inputs class="col-12 text-white" holder="User ID" nam="user_id" typs="number" />
                         <Form.Item className='d-block w-100'>
-                            {/* <button type="submit" className='btn btn-outline-light'>Upload Image on Instagram</button> */}
                             <ButtonCreative title="Upload Image" type='submit' />
-
                         </Form.Item>
                     </Row>
                 </Form>
