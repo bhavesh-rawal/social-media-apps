@@ -14,7 +14,7 @@ const Top_Navbar = (props: any) => {
         }}>
         <Container fluid>
           <Link className='text-decoration-none' to="/">
-            <Navbar.Brand>Home</Navbar.Brand>
+            <Navbar.Brand>Mr. Bhavu</Navbar.Brand>
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" className='toggle-button'/>
           <Navbar.Collapse id="basic-navbar-nav" >
