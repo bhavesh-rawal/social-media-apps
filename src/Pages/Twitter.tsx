@@ -6,7 +6,7 @@ const Twitter = () => {
   return (
     <>
       <div className='TW'>
-        <Container className='MB-Display'>
+        <Container className='MB-Display justify-content-center d-flex'>
 
           <Tweet />
         </Container>

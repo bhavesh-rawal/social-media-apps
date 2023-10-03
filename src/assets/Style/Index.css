@@ -44,16 +44,19 @@ button:hover {
 .card-gradientFB {
     background: rgb(238, 174, 202);
     background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgb(132, 180, 235) 100%);
+    text-align: center;
 }
 
 .card-gradientIG {
     background: rgb(131, 58, 180);
     background: linear-gradient(200deg, rgba(131, 58, 180, 0.34217436974789917) 0%, rgba(253, 29, 29, 0.22452731092436973) 49%, rgba(252, 176, 69, 0.258140756302521) 83%);
+    text-align: center;
 }
 
 .card-gradientTW {
     background: rgb(255, 255, 255);
     background: linear-gradient(200deg, rgba(37, 140, 209, 1) 0%, rgba(255, 255, 255, 1) 120%);
+    text-align: center;
 }
 
 .FB {
@@ -90,8 +93,14 @@ button:hover {
     color: #ffffff !important;
 }
 
-.css-l4u8b9-MuiInputBase-root-MuiInput-root::before {
+.css-l4u8b9-MuiInputBase-root-MuiInput-root::before,
+.css-12rx5qu::before {
     border-bottom: 1px solid rgb(255 252 252 / 38%) !important;
+}
+
+.css-12rx5qu::before:hover {
+    border-bottom: 1px solid rgba(255, 252, 252, 0.576) !important;
+
 }
 
 .text-field input {
@@ -126,4 +135,37 @@ button:hover {
         margin: 0 0 1rem 0;
     }
 
+}
+
+.search {
+    display: inline-block;
+    position: relative;
+}
+
+.search input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search button[type="button"] {
+    background-color: #4e99e9;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 0;
+    right: 0;
+    transition: .9s ease;
+}
+
+.search button[type="button"]:hover {
+    transform: scale(1.1);
+    color: rgb(255, 255, 255);
+    background-color: blue;
 }

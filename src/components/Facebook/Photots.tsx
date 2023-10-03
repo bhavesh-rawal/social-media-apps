@@ -14,14 +14,12 @@ const Photots = () => {
     const onFinishFB = (values: any) => {
         const value = { ...values, file, ['token']: UserData[0].access_token }
         dispatch(PostImageFB(value))
-        console.log(value);
-
+      
         form.resetFields()
     };
     const Fileset = (e: any) => {
         setfile(e.target.files[0])
-        console.log(e.target.files);
-
+     
     }
     return (
         <>
@@ -29,7 +27,7 @@ const Photots = () => {
                 hoverable
                 title="Facebook Post Images"
                 bordered={false}
-                className='card-gradientFB col-3'
+                className='card-gradientFB col-3 px-3 pb-4'
             >
                 <Form
                     form={form}
@@ -38,7 +36,7 @@ const Photots = () => {
                     scrollToFirstError
                 >
                     <Row>
-                        <UploadButton class="col-12" nam="Image" change={Fileset} />
+                        <UploadButton class="col-12 m-3" nam="Image" change={Fileset} />
                         <span className='fileName'>{file.name}</span>
                         <Inputs class="col-12" holder="Caption Photos" nam="Caption" typs="text" />
                         <Form.Item className='d-block w-100'>

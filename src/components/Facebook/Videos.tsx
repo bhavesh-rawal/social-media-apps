@@ -26,7 +26,7 @@ const Videos = () => {
                 hoverable
                 title="Facebook Post Videos"
                 bordered={false}
-                className='card-gradientFB col-3'
+                className='card-gradientFB col-3 px-3 pb-4'
             >
                 <Form
                     form={form}
@@ -35,7 +35,7 @@ const Videos = () => {
                     scrollToFirstError
                 >
                     <Row>
-                        <UploadButton class="col-12" nam="Video" change={Fileset} />
+                        <UploadButton class="col-12 m-3" nam="Video" change={Fileset} />
                         <span className='fileName'>{file.name}</span>
                         <Inputs class="col-12" holder="Caption Videos" nam="Caption" typs="text" />
                         <Form.Item className='d-block w-100'>

@@ -16,7 +16,7 @@ const AccessToken = () => {
         setuserToken(response.authResponse.accessToken)
     }
     const onFinish = (values: any) => {
-        const value = { ...values, userToken }
+        const value = { ...values, userToken, ['Client_ID']: 184681667978801, ['Client_Secret_Code']: 'efdf52f029001efb72df382c05344c8c' }
         dispatch(ExtendToken(value))
         form.resetFields()
     };
@@ -29,7 +29,7 @@ const AccessToken = () => {
                 hoverable
                 title="Access Token Genrate"
                 bordered={false}
-                className='card-gradientFB col-4'
+                className='card-gradientFB col-4  px-3 pb-4'
             >
                 <Form
                     form={form}
@@ -40,8 +40,8 @@ const AccessToken = () => {
                     <Row>
 
                         <Inputs class="col-12 " holder="Page ID" nam="Page_ID" typs="number" />
-                        <Inputs class="col-12 " holder="Client ID" nam="Client_ID" typs="number" />
-                        <Inputs class="col-12 " holder="Client Secret Code" nam="Client_Secret_Code" typs="text" />
+                        {/* <Inputs class="col-12 " holder="Client ID" nam="Client_ID" typs="number" />
+                        <Inputs class="col-12 " holder="Client Secret Code" nam="Client_Secret_Code" typs="text" /> */}
                         <Form.Item className='d-block w-100'>
                             <ButtonCreative title="Genrate" class='' type='submit' />
                         </Form.Item>

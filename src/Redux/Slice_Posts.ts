@@ -52,7 +52,6 @@ export const ExtendToken = createAsyncThunk(
 export const InstaPostImage = createAsyncThunk(
   "InstaPostImage",
   async (data: any, { rejectWithValue }) => {
-    console.log(data);
     try {
       const Responese = await axios.post(
         ` https://graph.facebook.com/v17.0/${data.user_id}/media?`,
@@ -82,7 +81,7 @@ export const InstaPostImage = createAsyncThunk(
 export const InstaPostVideo = createAsyncThunk(
   "InstaPostVideo",
   async (data: any, { rejectWithValue }) => {
-    console.log(data);
+  
     try {
       // Step 1: Upload the video
       const uploadResponse = await axios.post(
@@ -96,8 +95,7 @@ export const InstaPostVideo = createAsyncThunk(
       );
       await new Promise((resolve) => setTimeout(resolve, 60000)); // 60 second
       const creationId = uploadResponse.data.id;
-      console.log("Media :", uploadResponse);
-
+     
       const publishResponse = await axios.post(
         `https://graph.facebook.com/v17.0/${data.user_id}/media_publish?`,
         {
@@ -105,8 +103,7 @@ export const InstaPostVideo = createAsyncThunk(
           access_token: data.token,
         }
       );
-      console.log(publishResponse);
-
+   
       Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
       return publishResponse.data;
     } catch (error) {
@@ -115,54 +112,59 @@ export const InstaPostVideo = createAsyncThunk(
   }
 );
 
-export const TwitterTweet = createAsyncThunk(
-  "TwitterTweet",
+export const QuotesGenerate = createAsyncThunk(
+  "QuotesGenerate",
   async (data: any, { rejectWithValue }) => {
-    console.log(data);
     try {
-      const formData = new FormData();
-      formData.append("grant_type", "client_credentials");
-
-      const response = await axios.post(
-        "https://api.twitter.com/oauth2/token",
-        formData,
+      // Fetch synonyms for the given word
+      const response = await axios.get(
+        `https://api.api-ninjas.com/v1/thesaurus?word=${data}`,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          auth: {
-            username: data.Api_Key,
-            password: data.Api_Secret_Key,
+            "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
           },
         }
       );
 
-      const bearerToken = response.data.access_token;
-      console.log(response);
+      // Assuming response.data contains an array of synonyms
+      const synonyms = response.data.synonyms || [];
 
-      const tweetResponse = await axios.post(
-        "https://api.twitter.com/2/tweets",
-        {
-          status: data.tweetText,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${bearerToken}`,
-          },
+      let quote = ""; // Initialize an empty quote
+
+      // Fetch quotes for each synonym and stop when a successful quote is obtained
+      for (const synonym of synonyms) {
+        const quoteResponse = await axios.get(
+          `https://api.api-ninjas.com/v1/quotes?category=${synonym}`,
+          {
+            headers: {
+              "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
+            },
+          }
+        );
+
+        // Assuming quoteResponse.data[0] contains a quote
+        const synonymQuote = quoteResponse.data[0] || "";
+        console.log(quoteResponse.data);
+
+        if (synonymQuote) {
+          // If a quote is obtained, set it and stop the loop
+          quote = synonymQuote;
+          break;
         }
-      );
+      }
 
-      Swal.fire("Post!", "Your Tweet Post SuccussFully!", "success");
-      console.log(tweetResponse);
+      // Return the obtained quote (empty string if no quote was obtained)
+      console.log(quote);
 
-      return tweetResponse.data;
+      return quote;
     } catch (error) {
+      console.error("Error:", error);
       return rejectWithValue(error);
     }
   }
 );
 
-const userSlice:any = createSlice({
+const userSlice: any = createSlice({
   name: "users",
   initialState,
   reducers: {
@@ -183,8 +185,7 @@ const userSlice:any = createSlice({
           }
         )
         .then((res) => {
-          console.log(res);
-          Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
+           Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
         })
         .catch((err) => {
           console.log(err);
@@ -209,7 +210,22 @@ const userSlice:any = createSlice({
         )
         .then((res) => {
           Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
-          console.log(res);
+       
+        })
+        .catch((errr) => {
+          console.log(errr);
+        });
+    },
+    GenrateuserID: (state, action) => {
+      axios
+        .get(
+          `https://graph.facebook.com/v17.0/${state.UserData[0]["Page_ID"]}?fields=instagram_business_account&access_token=${state.UserData[0]["access_token"]}`
+        )
+        .then((res) => {
+          navigator.clipboard.writeText(res.data.instagram_business_account.id);
+
+          Swal.fire("Genrate!", "Your UserID Copied SuccussFully!", "success");
+
         })
         .catch((errr) => {
           console.log(errr);
@@ -258,22 +274,21 @@ const userSlice:any = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-
-      .addCase(TwitterTweet.pending, (state) => {
+      .addCase(QuotesGenerate.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(TwitterTweet.fulfilled, (state, action) => {
-        // state.UserData.push(action.payload.data)
+      .addCase(QuotesGenerate.fulfilled, (state, action) => {
+        state.UserData.push(action.payload);
         state.error = null;
         state.loading = false;
       })
-      .addCase(TwitterTweet.rejected, (state, action) => {
+      .addCase(QuotesGenerate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { PostImageFB, PostVideosFB } = userSlice.actions;
+export const { PostImageFB, PostVideosFB, GenrateuserID } = userSlice.actions;
 export default userSlice.reducer;
