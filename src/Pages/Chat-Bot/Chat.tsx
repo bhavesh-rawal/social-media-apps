@@ -4,13 +4,15 @@ import './TW.css'
 import { RobotOutlined, SendOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { QuotesGenerate } from '../../Redux/Slice_Posts';
+import { QuotesGenerate } from '../../Redux/actions';
+import MessageText from '../../components/Common/MessageText';
 
 const ChatBot = () => {
     const [messages, setMessages] = useState<any>([]);
+    const { UserData } = useSelector((state: any) => state.Post)
     const [chat, setchat] = useState('')
     const dispatch = useDispatch<any>()
-    const { UserData } = useSelector((state: any) => state.Post)
+
     const handleChat = async () => {
         setMessages([...messages, { text: chat, type: 'user' }])
         dispatch(QuotesGenerate(chat))
@@ -59,17 +61,7 @@ const ChatBot = () => {
                         }
                     </ul>
                 </div>
-                <div className="chat-input">
-                    <input placeholder="Enter a message..." onKeyPress={(e: any) => {
-                        if (e.key === 'Enter') {
-                            handleChat()
-                        }
-                    }}
-                        value={chat || ''}
-                        onChange={(e) => setchat(e.target.value)}
-                    />
-                    <SendOutlined onClick={handleChat} />
-                </div>
+                <MessageText handle={handleChat} chat={chat} chatset={setchat} />
                 {/* <ButtonCreative click={TweetPost} title="Upload Tweet" type='button' /> */}
             </Card >
         </>

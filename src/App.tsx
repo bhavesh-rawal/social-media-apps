@@ -1,15 +1,15 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import TopNavbar from './components/Header/TopNav';
+import TopNavbar from './components/Header/TopNavbar';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './assets/Style/Index.css'
-import Facebook from './Pages/Facebook';
-import Instagram from './Pages/Instagram';
-import ChatBot from './Pages/ChatBot';
+import Facebook from './Pages/Facebook/Facebook';
+import Instagram from './Pages/Instagram/Instagram';
+import ChatBot from './Pages/Chat-Bot/ChatBot';
 function App() {
   return (
     <>
-      <TopNavbar Navs={[{id:1, titls: "Facebook", nav: "/" }, {id:2, titls: "Instagram", nav: "/Instagram" }, {id:3, titls: "Chat Bot", nav: "/ChatBot" }]} />
+      <TopNavbar Navs={[{ titls: "Facebook", nav: "/" }, { titls: "Instagram", nav: "/Instagram" }, { titls: "Chat Bot", nav: "/ChatBot" }]} />
       <Routes>
         <Route path='/' element={<Facebook />} />
         <Route path='/Instagram' element={<Instagram />} />

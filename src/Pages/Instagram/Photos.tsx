@@ -1,41 +1,42 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GenrateuserID, InstaPostVideo } from '../../Redux/Slice_Posts';
-import { Inputs } from '../Forms-Items/Inputs';
+import { GenrateuserID } from '../../Redux/Slice_Posts';
+import { Inputs } from '../../components/Common/Inputs';
 import { Row } from 'react-bootstrap'
 import { Card, Form } from 'antd';
-import { ButtonCreative } from '../Forms-Items/Button';
-const Videos = () => {
+import { ButtonCreative } from '../../components/Common/Button';
+import { InstaPostImage } from '../../Redux/actions';
+
+const Photos = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch<any>()
-
     const { UserData } = useSelector((state: any) => state.Post)
 
     const onFinishIG = (values: any) => {
         const value = { ...values, ['token']: UserData[0].access_token }
-        dispatch(InstaPostVideo(value))
+        dispatch(InstaPostImage(value))
         form.resetFields()
     };
     return (
         <>
             <Card
                 hoverable
-                title="Instagram Post Videos"
+                title="Instagram Post Photos"
                 bordered={false}
-                className='card-gradientIG text-white col-4 px-3 pb-4'
+                className='card-gradientIG col-4 px-3 pb-4'
             >
                 <Form
                     form={form}
-                    name="IG_Post_Videos"
+                    name="IG_Post_Images"
                     onFinish={onFinishIG}
                     scrollToFirstError
                 >
                     <Row>
-                        <Inputs class="col-12 pt-2" holder="Video URL" nam="Video_url" typs="url" />
-                        <Inputs class="col-12" holder="Caption Videos" nam="Instacaption" typs="text" />
-                        <Inputs class="col-12" holder="User ID" nam="user_id" typs="number" />
+                        <Inputs class="col-12 pt-2" holder="Image URL" nam="InstaImage" typs="url" />
+                        <Inputs class="col-12" holder="Caption Photos" nam="Instacaption" typs="text" />
+                        <Inputs class="col-12 text-white" holder="User ID" nam="user_id" typs="number" />
                         <Form.Item className='d-block w-100'>
-                            <ButtonCreative title="Upload Video" type='submit' />
+                            <ButtonCreative title="Upload Image" type='submit' />
                         </Form.Item>
                         <div className='text-white'>
                             Don't have a user ID, Click here & Copy
@@ -47,5 +48,5 @@ const Videos = () => {
         </>
     )
 }
-export default Videos
 
+export default Photos

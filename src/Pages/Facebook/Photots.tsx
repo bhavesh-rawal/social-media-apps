@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Row } from 'react-bootstrap'
-import { Inputs } from '../Forms-Items/Inputs'
+import { Inputs } from '../../components/Common/Inputs'
 import { useDispatch, useSelector } from 'react-redux'
 import { PostImageFB } from '../../Redux/Slice_Posts'
 import { Card, Form } from 'antd'
-import { ButtonCreative, UploadButton } from '../Forms-Items/Button'
+import { ButtonCreative, UploadButton } from '../../components/Common/Button'
 const Photots = () => {
     const dispatch = useDispatch<any>()
     const { UserData } = useSelector((state: any) => state.Post)
@@ -14,12 +14,12 @@ const Photots = () => {
     const onFinishFB = (values: any) => {
         const value = { ...values, file, ['token']: UserData[0].access_token }
         dispatch(PostImageFB(value))
-      
+
         form.resetFields()
     };
     const Fileset = (e: any) => {
         setfile(e.target.files[0])
-     
+
     }
     return (
         <>

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Container, Row } from 'react-bootstrap'
-import Photots from '../components/Facebook/Photots'
-import Videos from '../components/Facebook/Videos'
-import AccessToken from '../components/Facebook/AccessToken'
+import Photots from './Photots'
+import Videos from './Videos'
+import AccessToken from './AccessToken'
 
 const Facebook = () => {
   return (

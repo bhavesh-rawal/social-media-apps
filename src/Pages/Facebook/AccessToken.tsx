@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Row } from 'react-bootstrap'
-import { Inputs } from '../Forms-Items/Inputs'
+import { Inputs } from '../../components/Common/Inputs'
 import { useDispatch } from 'react-redux'
-import { ExtendToken } from '../../Redux/Slice_Posts'
 import { Card, Form } from 'antd';
-import { ButtonCreative, ButtonFB } from '../Forms-Items/Button'
+import { ButtonCreative, ButtonFB } from '../../components/Common/Button'
+import { ExtendToken } from '../../Redux/actions';
 
 
 const AccessToken = () => {

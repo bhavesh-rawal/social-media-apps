@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { Row } from 'react-bootstrap'
-import { Inputs } from '../Forms-Items/Inputs'
+import { Inputs } from '../../components/Common/Inputs'
 import { useDispatch, useSelector } from 'react-redux'
 import { PostVideosFB } from '../../Redux/Slice_Posts'
 import { Card, Form } from 'antd'
-import { ButtonCreative, UploadButton } from '../Forms-Items/Button'
+import { ButtonCreative, UploadButton } from '../../components/Common/Button'
 const Videos = () => {
     const [form] = Form.useForm();
     const [file, setfile] = useState({ name: '' });

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
-import Chat from '../components/Chats/Chat'
+import Chat from './Chat'
 
 const ChatBot = () => {
   return (
