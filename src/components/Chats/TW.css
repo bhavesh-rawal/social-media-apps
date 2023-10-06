@@ -17,12 +17,12 @@
     justify-content: flex-end;
 }
 
-.chatbox .incoming span {
+.chatbox .incoming .robot {
     height: 32px;
     color: #fff;
     align-self: flex-end;
     background: #724ae8;
-    margin: 0 10px 7px 0;
+    margin: 0 10px 15px 0;
 }
 
 .chatbox .chat p {

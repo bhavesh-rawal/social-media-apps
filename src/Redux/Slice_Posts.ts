@@ -81,7 +81,6 @@ export const InstaPostImage = createAsyncThunk(
 export const InstaPostVideo = createAsyncThunk(
   "InstaPostVideo",
   async (data: any, { rejectWithValue }) => {
-  
     try {
       // Step 1: Upload the video
       const uploadResponse = await axios.post(
@@ -95,7 +94,7 @@ export const InstaPostVideo = createAsyncThunk(
       );
       await new Promise((resolve) => setTimeout(resolve, 60000)); // 60 second
       const creationId = uploadResponse.data.id;
-     
+
       const publishResponse = await axios.post(
         `https://graph.facebook.com/v17.0/${data.user_id}/media_publish?`,
         {
@@ -103,7 +102,7 @@ export const InstaPostVideo = createAsyncThunk(
           access_token: data.token,
         }
       );
-   
+
       Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
       return publishResponse.data;
     } catch (error) {
@@ -114,11 +113,10 @@ export const InstaPostVideo = createAsyncThunk(
 
 export const QuotesGenerate = createAsyncThunk(
   "QuotesGenerate",
-  async (data: any, { rejectWithValue }) => {
+  async (chat: string, { rejectWithValue }) => {
     try {
-      // Fetch synonyms for the given word
       const response = await axios.get(
-        `https://api.api-ninjas.com/v1/thesaurus?word=${data}`,
+        `https://api.api-ninjas.com/v1/thesaurus?word=${chat}`,
         {
           headers: {
             "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
@@ -126,15 +124,13 @@ export const QuotesGenerate = createAsyncThunk(
         }
       );
 
-      // Assuming response.data contains an array of synonyms
-      const synonyms = response.data.synonyms || [];
+      const synonyms = [chat, ...response.data.synonyms] || [];
 
-      let quote = ""; // Initialize an empty quote
+      let quotes: any = [];
 
-      // Fetch quotes for each synonym and stop when a successful quote is obtained
       for (const synonym of synonyms) {
         const quoteResponse = await axios.get(
-          `https://api.api-ninjas.com/v1/quotes?category=${synonym}`,
+          `https://api.api-ninjas.com/v1/quotes?category=${synonym}&limit=10`,
           {
             headers: {
               "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
@@ -142,21 +138,22 @@ export const QuotesGenerate = createAsyncThunk(
           }
         );
 
-        // Assuming quoteResponse.data[0] contains a quote
-        const synonymQuote = quoteResponse.data[0] || "";
-        console.log(quoteResponse.data);
-
-        if (synonymQuote) {
-          // If a quote is obtained, set it and stop the loop
-          quote = synonymQuote;
-          break;
-        }
+        quotes = [...quoteResponse.data, ...quotes];
       }
+      console.log(quotes.length );
 
-      // Return the obtained quote (empty string if no quote was obtained)
-      console.log(quote);
+      if (quotes.length > 0) {
+        return quotes;
+      } else {
+        console.log(quotes.length);
 
-      return quote;
+        return [
+          {
+            quote: `Something else,\nThis type doesn't exist !`,
+            type: "bot",
+          },
+        ];
+      }
     } catch (error) {
       console.error("Error:", error);
       return rejectWithValue(error);
@@ -185,7 +182,7 @@ const userSlice: any = createSlice({
           }
         )
         .then((res) => {
-           Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
+          Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
         })
         .catch((err) => {
           console.log(err);
@@ -210,7 +207,6 @@ const userSlice: any = createSlice({
         )
         .then((res) => {
           Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
-       
         })
         .catch((errr) => {
           console.log(errr);
@@ -225,7 +221,6 @@ const userSlice: any = createSlice({
           navigator.clipboard.writeText(res.data.instagram_business_account.id);
 
           Swal.fire("Genrate!", "Your UserID Copied SuccussFully!", "success");
-
         })
         .catch((errr) => {
           console.log(errr);
@@ -279,11 +274,16 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(QuotesGenerate.fulfilled, (state, action) => {
-        state.UserData.push(action.payload);
+        state.UserData = action.payload;
+        console.log(action.payload);
+
+        // state.UserData = action.payload;
         state.error = null;
         state.loading = false;
       })
       .addCase(QuotesGenerate.rejected, (state, action) => {
+        // state.UserData = action.payload;
+
         state.loading = false;
         state.error = action.payload;
       });

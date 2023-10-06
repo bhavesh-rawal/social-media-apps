@@ -15,11 +15,12 @@ const Top_Navbar = (props: any) => {
         <Container fluid>
           <Link className='text-decoration-none' to="/">
             <Navbar.Brand>
-              <img src='bhavu.png' style={{
+              {/* <img src='bhavu.png' style={{
                 width: "3rem",
                 height: "3rem",
                 opacity: "0.8"
-              }} alt='Owner Image' />
+              }} alt='Owner Image' /> */}
+              Home
             </Navbar.Brand>
           </Link>
           <Navbar.Toggle aria-controls="basic-navbar-nav" className='toggle-button' />

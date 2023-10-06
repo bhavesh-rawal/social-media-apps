@@ -56,7 +56,6 @@ button:hover {
 .card-gradientTW {
     background: rgb(255, 255, 255);
     background: linear-gradient(200deg, rgba(37, 140, 209, 1) 0%, rgba(255, 255, 255, 1) 120%);
-    text-align: center;
 }
 
 .FB {
