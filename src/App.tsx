@@ -9,7 +9,7 @@ import ChatBot from './Pages/ChatBot';
 function App() {
   return (
     <>
-      <TopNavbar Navs={[{ titls: "Facebook", nav: "/" }, { titls: "Instagram", nav: "/Instagram" }, { titls: "Chat Bot", nav: "/ChatBot" }]} />
+      <TopNavbar Navs={[{id:1, titls: "Facebook", nav: "/" }, {id:2, titls: "Instagram", nav: "/Instagram" }, {id:3, titls: "Chat Bot", nav: "/ChatBot" }]} />
       <Routes>
         <Route path='/' element={<Facebook />} />
         <Route path='/Instagram' element={<Instagram />} />

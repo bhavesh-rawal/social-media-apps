@@ -119,7 +119,7 @@ export const QuotesGenerate = createAsyncThunk(
         `https://api.api-ninjas.com/v1/thesaurus?word=${chat}`,
         {
           headers: {
-            "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
+            "X-Api-Key": "aOQpxNtZNr7liuQI6Y3lcg==J0tKAxw8K7wZgo60",
           },
         }
       );
@@ -133,20 +133,16 @@ export const QuotesGenerate = createAsyncThunk(
           `https://api.api-ninjas.com/v1/quotes?category=${synonym}&limit=10`,
           {
             headers: {
-              "X-Api-Key": "riB2ysaiPMXUBBBYE6k9mQ==854KIpb7YIkjJOzN",
+              "X-Api-Key": "aOQpxNtZNr7liuQI6Y3lcg==J0tKAxw8K7wZgo60",
             },
           }
         );
 
         quotes = [...quoteResponse.data, ...quotes];
       }
-      console.log(quotes.length );
-
       if (quotes.length > 0) {
         return quotes;
       } else {
-        console.log(quotes.length);
-
         return [
           {
             quote: `Something else,\nThis type doesn't exist !`,
@@ -275,15 +271,10 @@ const userSlice: any = createSlice({
       })
       .addCase(QuotesGenerate.fulfilled, (state, action) => {
         state.UserData = action.payload;
-        console.log(action.payload);
-
-        // state.UserData = action.payload;
         state.error = null;
         state.loading = false;
       })
       .addCase(QuotesGenerate.rejected, (state, action) => {
-        // state.UserData = action.payload;
-
         state.loading = false;
         state.error = action.payload;
       });

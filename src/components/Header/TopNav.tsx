@@ -15,11 +15,6 @@ const Top_Navbar = (props: any) => {
         <Container fluid>
           <Link className='text-decoration-none' to="/">
             <Navbar.Brand>
-              {/* <img src='bhavu.png' style={{
-                width: "3rem",
-                height: "3rem",
-                opacity: "0.8"
-              }} alt='Owner Image' /> */}
               Home
             </Navbar.Brand>
           </Link>
@@ -29,7 +24,7 @@ const Top_Navbar = (props: any) => {
               {
                 props.Navs.map((i: any, indx: number) => (
                   <>
-                    <Link className='text-decoration-none text-dark mx-2' to={i.nav} key={indx}>{i.titls}</Link>
+                    <Link key={`${i.id}`} className='text-decoration-none text-dark mx-2' to={i.nav} >{i.titls}</Link>
                   </>
                 ))
               }

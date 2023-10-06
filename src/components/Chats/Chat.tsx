@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { QuotesGenerate } from '../../Redux/Slice_Posts';
 
 const ChatBot = () => {
-    const [messages, setMessages] = useState<any>([{ quote: 'Hi there 👋\nHow can I help you today?', type: 'bot' }]);
+    const [messages, setMessages] = useState<any>([]);
     const [chat, setchat] = useState('')
     const dispatch = useDispatch<any>()
     const { UserData } = useSelector((state: any) => state.Post)
@@ -17,7 +17,13 @@ const ChatBot = () => {
         setchat('')
     }
     useEffect(() => {
-        setMessages([...messages, ...UserData])
+        const allQuotes = (UserData
+            .filter((message: any) => message.type !== 'user')
+            .map((message: any) => message.quote)
+            .join('\n\n')) || 'Hi there 👋\nHow can I help you today?';
+
+        setMessages([...messages, { ['quote']: allQuotes }])
+
     }, [UserData])
     return (
         <>
@@ -40,13 +46,13 @@ const ChatBot = () => {
                 >
                     <ul className="chatbox p-0">
                         {
-                            messages.map((message: any, index: any) => (
-                                ('user' !== message.type) ? <li className={`chat incoming`}>
+                            messages.map((message: any, index: number) => (
+                                ('user' !== message.type) ? <li key={`bot-incoming${index}`} className={`chat incoming`}>
                                     <RobotOutlined className='fs-3 justify-content-center robot' />
-                                    <p>{message.quote}</p>
+                                    <p >{message.quote}</p>
 
                                 </li> :
-                                    <li className={`chat outgoing`}>
+                                    <li key={`user-outgoing${index}`} className={`chat outgoing`}>
                                         <p>{message.text}</p>
                                     </li>
                             ))
