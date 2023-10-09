@@ -10,18 +10,14 @@ export const ExtendToken = createAsyncThunk(
       const Responese = await axios.get(
         `${facebook}${data.Page_ID}?fields=access_token&access_token=${data.userToken}`
       );
-      const Result = await axios.post(
-        `${facebook}oauth/access_token`,
-        null,
-        {
-          params: {
-            grant_type: "fb_exchange_token",
-            client_id: data.Client_ID,
-            client_secret: data.Client_Secret_Code,
-            fb_exchange_token: Responese.data.access_token,
-          },
-        }
-      );
+      const Result = await axios.post(`${facebook}oauth/access_token`, null, {
+        params: {
+          grant_type: "fb_exchange_token",
+          client_id: data.Client_ID,
+          client_secret: data.Client_Secret_Code,
+          fb_exchange_token: Responese.data.access_token,
+        },
+      });
       Swal.fire(
         "Generated!",
         "Your Access Token Generated SuccussFully!",
@@ -42,14 +38,11 @@ export const InstaPostImage = createAsyncThunk(
   "InstaPostImage",
   async (data: any, { rejectWithValue }) => {
     try {
-      const Responese = await axios.post(
-        ` ${facebook}${data.user_id}/media?`,
-        {
-          image_url: data.InstaImage,
-          caption: data.Instacaption,
-          access_token: data.token,
-        }
-      );
+      const Responese = await axios.post(` ${facebook}${data.user_id}/media?`, {
+        image_url: data.InstaImage,
+        caption: data.Instacaption,
+        access_token: data.token,
+      });
       const Result = await axios.post(
         ` ${facebook}${data.user_id}/media_publish?`,
         {
@@ -106,7 +99,7 @@ export const QuotesGenerate = createAsyncThunk(
     try {
       const response = await axios.get(`${ninja}thesaurus?word=${chat}`, {
         headers: {
-          "X-Api-Key": "aOQpxNtZNr7liuQI6Y3lcg==J0tKAxw8K7wZgo60",
+          "X-Api-Key": "7obc5rJ2ma2oqqL3vJ169w==lANngUHQtBvlczBB",
         },
       });
 
@@ -119,7 +112,7 @@ export const QuotesGenerate = createAsyncThunk(
           `${ninja}quotes?category=${synonym}&limit=10`,
           {
             headers: {
-              "X-Api-Key": "aOQpxNtZNr7liuQI6Y3lcg==J0tKAxw8K7wZgo60",
+              "X-Api-Key": "7obc5rJ2ma2oqqL3vJ169w==lANngUHQtBvlczBB",
             },
           }
         );
