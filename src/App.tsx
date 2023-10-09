@@ -2,7 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import TopNavbar from './components/Header/TopNavbar';
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './assets/Style/Index.css'
+import './assets/css/App.css'
 import Facebook from './Pages/Facebook/Facebook';
 import Instagram from './Pages/Instagram/Instagram';
 import ChatBot from './Pages/Chat-Bot/ChatBot';

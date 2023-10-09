@@ -1,5 +1,5 @@
 import React from 'react'
-import './style.css'
+import './index.css'
 import { CloudUploadOutlined } from '@ant-design/icons'
 import { FacebookProvider, LoginButton } from 'react-facebook';
 import { Input } from 'antd'
