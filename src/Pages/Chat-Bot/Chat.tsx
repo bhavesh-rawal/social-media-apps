@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from 'antd';
-import './TW.css'
+import './style.css'
 import { RobotOutlined, SendOutlined } from '@ant-design/icons';
 
 import { useDispatch, useSelector } from 'react-redux';
