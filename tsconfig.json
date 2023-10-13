@@ -22,5 +22,7 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "types": ["@types", "@chatscope/chat-ui-kit-react"]
+
 }

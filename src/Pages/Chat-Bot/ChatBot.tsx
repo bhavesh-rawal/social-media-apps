@@ -7,7 +7,6 @@ const ChatBot = () => {
     <>
       <div className='TW'>
         <Container className='MB-Display justify-content-center d-flex'>
-
           <Chat />
         </Container>
       </div>

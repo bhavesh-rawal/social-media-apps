@@ -1,25 +1,37 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row } from 'react-bootstrap'
 import { Inputs } from '../../components/Common/Inputs'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Card, Form } from 'antd';
 import { ButtonCreative, ButtonFB } from '../../components/Common/Button'
-import { ExtendToken } from '../../Redux/actions';
+import { ExtendToken, pageList } from '../../Redux/actions';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 
 const AccessToken = () => {
-    const [form] = Form.useForm();
-
+    const [page, setPage] = useState<any>([]);
+    const [pageID, setPageID] = useState<any>('');
     const dispatch = useDispatch<any>()
-    const [userToken, setuserToken] = useState('')
-    function handleSuccess(response: any) {
-        setuserToken(response.authResponse.accessToken)
+    const handlesPages = async () => {
+        const Pages = localStorage.getItem('Pages')
+        setPage(Pages ? JSON.parse(Pages) : [])
     }
-    const onFinish = (values: any) => {
-        const value = { ...values, userToken, ['Client_ID']: 184681667978801, ['Client_Secret_Code']: 'efdf52f029001efb72df382c05344c8c' }
+    const handleSuccess = async (response: any) => {
+
+        await dispatch(pageList(response.authResponse))
+        await handlesPages()
+    }
+    const onFinish = () => {
+        const value = {
+            ['pageID']: pageID.id, ['access_token']: pageID.access_token,
+            ['Client_ID']: 184681667978801, ['Client_Secret_Code']: 'efdf52f029001efb72df382c05344c8c'
+        }
+
         dispatch(ExtendToken(value))
-        form.resetFields()
     };
+    useEffect(() => {
+        handlesPages()
+    }, [])
 
     return (
         <>
@@ -31,25 +43,38 @@ const AccessToken = () => {
                 bordered={false}
                 className='card-gradientFB col-4  px-3 pb-4'
             >
-                <Form
-                    form={form}
-                    name="Access_Token"
-                    onFinish={onFinish}
-                    scrollToFirstError
-                >
-                    <Row>
 
-                        <Inputs class="col-12 " holder="Page ID" nam="Page_ID" typs="number" />
-                        {/* <Inputs class="col-12 " holder="Client ID" nam="Client_ID" typs="number" />
-                        <Inputs class="col-12 " holder="Client Secret Code" nam="Client_Secret_Code" typs="text" /> */}
-                        <Form.Item className='d-block w-100'>
-                            <ButtonCreative title="Genrate" class='' type='submit' />
-                        </Form.Item>
-                        <div className='col-12'>
-                            <ButtonFB handleSuccess={handleSuccess} />
-                        </div>
-                    </Row>
-                </Form>
+                <Row>
+
+                    <FormControl variant="standard" className='px-2 mb-5 mt-3'>
+                        <InputLabel id="demo-simple-select-standard-label" className='px-3'>Pages</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-standard-label"
+                            id="demo-simple-select-standard"
+                            value={pageID}
+                            onChange={(e) => setPageID(e.target.value)}
+                            label="Pages"
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {
+                                page.map((i: any) => ([
+                                    <MenuItem value={i}>{i.name}</MenuItem>
+                                ]))
+
+                            }
+                        </Select>
+                    </FormControl>
+                    {/* <Inputs class="col-12 " holder="Page ID" nam="Page_ID" typs="number" /> */}
+                    <Form.Item className='d-block w-100'>
+                        <ButtonCreative title="Genrate" class='' type='button' click={onFinish} />
+                    </Form.Item>
+                    <div className='col-12'>
+                        <ButtonFB handleSuccess={handleSuccess} />
+                    </div>
+                </Row>
+
 
             </Card>
 

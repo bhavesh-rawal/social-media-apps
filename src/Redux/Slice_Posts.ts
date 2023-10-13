@@ -7,6 +7,7 @@ import {
   InstaPostVideo,
   InstagramPageID,
   QuotesGenerate,
+  pageList,
 } from "./actions";
 
 interface PostState {
@@ -43,7 +44,7 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(ExtendToken.fulfilled, (state, action) => {
-        state.UserData.push(action.payload);
+        state.UserData = [action.payload];
         state.error = null;
         state.loading = false;
       })
@@ -82,11 +83,25 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(QuotesGenerate.fulfilled, (state, action) => {
-        state.UserData = action.payload;
+        state.UserData = [action.payload];
         state.error = null;
         state.loading = false;
       })
       .addCase(QuotesGenerate.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(pageList.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(pageList.fulfilled, (state, action) => {
+        // state.UserData.push({ ["Pages"]: action.payload });
+        localStorage.setItem("Pages", JSON.stringify(action.payload));
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(pageList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

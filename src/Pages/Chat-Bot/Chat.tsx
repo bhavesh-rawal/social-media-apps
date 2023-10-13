@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from 'antd';
 import './index.css'
-import { RobotOutlined } from '@ant-design/icons';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { QuotesGenerate } from '../../Redux/actions';
-import MessageText from '../../components/Common/MessageText';
+import '@chatscope/chat-ui-kit-styles/dist/default/styles.min.css';
+import {
+    MainContainer,
+    ChatContainer,
+    MessageList,
+    Message,
+    MessageInput,
+} from '@chatscope/chat-ui-kit-react';
+
 
 const ChatBot = () => {
-    const [messages, setMessages] = useState<any>([]);
+    const [messages, setMessages] = useState<any>([{
+        message: "Hi there 👋\nHow can I help you today?",
+        sender: "ChatGPT",
+    }]);
     const { UserData } = useSelector((state: any) => state.Post)
-    const [chat, setchat] = useState('')
     const dispatch = useDispatch<any>()
 
-    const handleChat = async () => {
-        setMessages([...messages, { text: chat, type: 'user' }])
-        dispatch(QuotesGenerate(chat))
-        setchat('')
+    const handleChat = async (message: any) => {
+        setMessages([...messages, {
+            message,
+            direction: 'outgoing',
+            sender: "user",
+        }])
+        dispatch(QuotesGenerate(message))
+        // setchat('')
     }
     useEffect(() => {
-        const allQuotes = (UserData
-            .filter((message: any) => message.type !== 'user')
-            .map((message: any) => message.quote)
-            .join('\n\n')) || 'Hi there 👋\nHow can I help you today?';
-
-        setMessages([...messages, { ['quote']: allQuotes }])
-
+        setMessages([...messages, ...UserData])
     }, [UserData])
     return (
         <>
@@ -38,31 +44,22 @@ const ChatBot = () => {
                     height: '500px'
                 }}
             >
-                <div className="chatbot w-100 p-3"
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: '387px',
-                        overflowY: 'scroll'
-                    }}
-                >
-                    <ul className="chatbox p-0">
-                        {
-                            messages.map((message: any, index: number) => (
-                                ('user' !== message.type) ? <li key={`bot-incoming${index}`} className={`chat incoming`}>
-                                    <RobotOutlined className='fs-3 justify-content-center robot' />
-                                    <p >{message.quote}</p>
+                <div className="App">
+                    <div style={{ position: "relative", height: "490px" }}>
+                        <MainContainer>
+                            <ChatContainer>
+                                <MessageList
+                                >
+                                    {messages.map((message: any, i: any) => {
 
-                                </li> :
-                                    <li key={`user-outgoing${index}`} className={`chat outgoing`}>
-                                        <p>{message.text}</p>
-                                    </li>
-                            ))
-                        }
-                    </ul>
+                                        return <Message className='mt-3' key={i} model={message} />
+                                    })}
+                                </MessageList>
+                                <MessageInput placeholder="Send a Message" onSend={handleChat} />
+                            </ChatContainer>
+                        </MainContainer>
+                    </div>
                 </div>
-                <MessageText handle={handleChat} chat={chat} chatset={setchat} />
-                {/* <ButtonCreative click={TweetPost} title="Upload Tweet" type='button' /> */}
             </Card >
         </>
     );

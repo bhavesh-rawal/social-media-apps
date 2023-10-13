@@ -7,15 +7,12 @@ export const ExtendToken = createAsyncThunk(
   "extentToken",
   async (data: any, { rejectWithValue }) => {
     try {
-      const Responese = await axios.get(
-        `${facebook}${data.Page_ID}?fields=access_token&access_token=${data.userToken}`
-      );
-      const Result = await axios.post(`${facebook}oauth/access_token`, null, {
+      const Result = await axios.post(`${facebook}oauth/access_token?`, null, {
         params: {
           grant_type: "fb_exchange_token",
           client_id: data.Client_ID,
           client_secret: data.Client_Secret_Code,
-          fb_exchange_token: Responese.data.access_token,
+          fb_exchange_token: data.access_token,
         },
       });
       Swal.fire(
@@ -23,10 +20,9 @@ export const ExtendToken = createAsyncThunk(
         "Your Access Token Generated SuccussFully!",
         "success"
       );
-
       return {
         ["access_token"]: Result.data.access_token,
-        ["Page_ID"]: data.Page_ID,
+        ["Page_ID"]: data.pageID,
       };
     } catch (error) {
       return rejectWithValue(error);
@@ -95,59 +91,48 @@ export const InstaPostVideo = createAsyncThunk(
 
 export const QuotesGenerate = createAsyncThunk(
   "QuotesGenerate",
-  async (chat: string, { rejectWithValue }) => {
+  async (chat: any, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${ninja}thesaurus?word=${chat}`, {
-        headers: {
-          "X-Api-Key": "7obc5rJ2ma2oqqL3vJ169w==lANngUHQtBvlczBB",
-        },
-      });
-
-      const synonyms = [chat, ...response.data.synonyms] || [];
-
-      let quotes: any = [];
-
-      for (const synonym of synonyms) {
-        const quoteResponse = await axios.get(
-          `${ninja}quotes?category=${synonym}&limit=10`,
-          {
-            headers: {
-              "X-Api-Key": "7obc5rJ2ma2oqqL3vJ169w==lANngUHQtBvlczBB",
-            },
-          }
-        );
-
-        quotes = [...quoteResponse.data, ...quotes];
-      }
-      if (quotes.length > 0) {
-        return quotes;
+      const Response = await axios.post(
+        "https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText?key=AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY",
+        {
+          prompt: { text: chat },
+        }
+      );
+      if (Response.data.candidates) {
+        return {
+          message: Response.data.candidates[0].output,
+          sender: "ChatGPT",
+        };
       } else {
-        return [
-          {
-            quote: `Something else,\nThis type doesn't exist !`,
-            type: "bot",
-          },
-        ];
+        return {
+          message: `Something else,\nThis text doesn't exist !`,
+          sender: "ChatGPT",
+        };
       }
     } catch (error) {
       console.error("Error:", error);
-      return rejectWithValue(error);
     }
   }
 );
 
 export const FacebookImgPost = async (state: any, action: any) => {
-  const formData = new FormData();
-  formData.append("access_token", state.UserData[0]["access_token"]);
-  formData.append("source", action.payload.file, action.payload.file.name);
-  formData.append("message", action.payload.Caption);
   await axios
-    .post(`${facebook}${state.UserData[0]["Page_ID"]}/photos?`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+    .post(
+      `${facebook}${state.UserData[0]["Page_ID"]}/photos`,
+      {
+        message: action.payload.Caption,
+        source: action.payload.file,
+        access_token: state.UserData[0]["access_token"],
       },
-    })
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    )
     .then((res) => {
+      console.log(res);
       Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
     })
     .catch((err) => {
@@ -179,7 +164,10 @@ export const FacebookVideosPost = async (state: any, action: any) => {
     });
 };
 
+//Condition Pending
 export const InstagramPageID = async (state: any) => {
+  console.log(state);
+
   state
     ? await axios
         .get(
@@ -195,3 +183,23 @@ export const InstagramPageID = async (state: any) => {
         })
     : alert("Please Go to Facebook Authorization Complete fisrt !");
 };
+
+export const pageList = createAsyncThunk(
+  "pageList",
+  async (data: any, { rejectWithValue }) => {
+    try {
+      const Responese = await axios.get(
+        `${facebook}${data.userID}/accounts?access_token=${data.accessToken}`
+      );
+      Swal.fire(
+        "Page List!",
+        "Your Access Token Generated SuccussFully!",
+        "success"
+      );
+
+      return Responese.data.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
