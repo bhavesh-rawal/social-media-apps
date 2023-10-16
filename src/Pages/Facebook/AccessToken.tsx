@@ -35,15 +35,12 @@ const AccessToken = () => {
 
     return (
         <>
-
-
             <Card
                 hoverable
                 title="Access Token Genrate"
                 bordered={false}
-                className='card-gradientFB col-4  px-3 pb-4'
+                className='card-gradientFB col-3  px-3 pb-4'
             >
-
                 <Row>
 
                     <FormControl variant="standard" className='px-2 mb-5 mt-3'>
