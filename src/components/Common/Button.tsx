@@ -36,7 +36,7 @@ export const ButtonFB = (props: any) => {
         <>
             <FacebookProvider appId={'184681667978801'}>
                 <LoginButton
-                    scope="email"
+                    scope="email,business_management"
                     onSuccess={props.handleSuccess}
                     onError={(err) => console.log(err)}
                 >
