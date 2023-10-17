@@ -16,8 +16,8 @@ export const ExtendToken = createAsyncThunk(
         },
       });
       Swal.fire(
-        "Generated!",
-        "Your Access Token Generated SuccussFully!",
+        "Generated Token!",
+        "Page Access Token Generated SuccussFully!",
         "success"
       );
       return {
@@ -34,11 +34,14 @@ export const InstaPostImage = createAsyncThunk(
   "InstaPostImage",
   async (data: any, { rejectWithValue }) => {
     try {
+      const IG_user = await axios.get(
+        `${facebook}${data[0].PageID}?fields=instagram_business_account&access_token=${data[0].access_token}`
+      );
+
       const formData = new FormData();
       formData.append("file", data.file);
       formData.append("upload_preset", "Bhavu1432"); // Replace with your preset
 
-      console.log(data);
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/dacofuonc/image/upload`,
         formData,
@@ -48,20 +51,23 @@ export const InstaPostImage = createAsyncThunk(
           },
         }
       );
-      const Responese = await axios.post(` ${facebook}${data.user_id}/media?`, {
-        image_url: response.data.secure_url,
-        caption: data.Caption,
-        access_token: data.token,
-      });
-      const Result = await axios.post(
-        ` ${facebook}${data.user_id}/media_publish?`,
+
+      const Responese = await axios.post(
+        `${facebook}${IG_user.data.instagram_business_account.id}/media?`,
         {
-          creation_id: Responese.data.id,
-          access_token: data.token,
+          image_url: response.data.secure_url,
+          caption: data.Caption,
+          access_token: data[0].access_token,
         }
       );
 
-      Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
+      const Result = await axios.post(
+        `${facebook}${IG_user.data.instagram_business_account.id}/media_publish?`,
+        {
+          creation_id: Responese.data.id,
+          access_token: data[0].access_token,
+        }
+      );
 
       return response.data;
     } catch (error) {
@@ -74,11 +80,14 @@ export const InstaPostVideo = createAsyncThunk(
   "InstaPostVideo",
   async (data: any, { rejectWithValue }) => {
     try {
+      const IG_user = await axios.get(
+        `${facebook}${data[0].PageID}?fields=instagram_business_account&access_token=${data[0].access_token}`
+      );
+
       const formData = new FormData();
       formData.append("file", data.file);
       formData.append("upload_preset", "Bhavu1432"); // Replace with your preset
 
-      console.log(data);
       const response = await axios.post(
         `https://api.cloudinary.com/v1_1/dacofuonc/video/upload`,
         formData,
@@ -90,26 +99,24 @@ export const InstaPostVideo = createAsyncThunk(
       );
 
       const uploadResponse = await axios.post(
-        `${facebook}${data.user_id}/media?`,
+        `${facebook}${IG_user.data.instagram_business_account.id}/media?`,
         {
           media_type: "VIDEO",
           video_url: response.data.secure_url,
           caption: data.Caption,
-          access_token: data.token,
+          access_token: data[0].access_token,
         }
       );
       await new Promise((resolve) => setTimeout(resolve, 60000)); // 60 second
       const creationId = uploadResponse.data.id;
 
       const publishResponse = await axios.post(
-        `${facebook}${data.user_id}/media_publish?`,
+        `${facebook}${IG_user.data.instagram_business_account.id}/media_publish?`,
         {
           creation_id: creationId,
-          access_token: data.token,
+          access_token: data[0].access_token,
         }
       );
-
-      Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
       return publishResponse.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -147,7 +154,7 @@ export const QuotesGenerate = createAsyncThunk(
 export const FacebookImgPost = async (state: any, action: any) => {
   await axios
     .post(
-      `${facebook}${state.UserData[0]["Page_ID"]}/photos`,
+      `${facebook}${state.UserData[0]["PageID"]}/photos`,
       {
         message: action.payload.Caption,
         source: action.payload.file,
@@ -160,8 +167,8 @@ export const FacebookImgPost = async (state: any, action: any) => {
       }
     )
     .then((res) => {
-      console.log(res);
-      Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
+      console.log("Your Photo Post on Facebook SuccussFully!");
+      // Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
     })
     .catch((err) => {
       console.log(err);
@@ -171,7 +178,7 @@ export const FacebookImgPost = async (state: any, action: any) => {
 export const FacebookVideosPost = async (state: any, action: any) => {
   await axios
     .post(
-      `${facebook}${state.UserData[0]["Page_ID"]}/videos?`,
+      `${facebook}${state.UserData[0]["PageID"]}/videos?`,
       {
         description: action.payload.Caption,
         source: action.payload.file,
@@ -185,49 +192,42 @@ export const FacebookVideosPost = async (state: any, action: any) => {
       }
     )
     .then((res) => {
-      Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
+      // Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
+      console.log("Your Video Post Facebook SuccussFully!");
     })
     .catch((errr) => {
       console.log(errr);
     });
 };
 
-//Condition Pending
-export const InstagramPageID = async (state: any) => {
-  console.log(state);
-
-  state
-    ? await axios
-        .get(
-          `${facebook}${state.UserData[0]["Page_ID"]}?fields=instagram_business_account&access_token=${state.UserData[0]["access_token"]}`
-        )
-        .then((res) => {
-          navigator.clipboard.writeText(res.data.instagram_business_account.id);
-
-          Swal.fire("Genrate!", "Your UserID Copied SuccussFully!", "success");
-        })
-        .catch((errr) => {
-          console.log(errr);
-        })
-    : alert("Please Go to Facebook Authorization Complete fisrt !");
-};
-
 export const pageList = createAsyncThunk(
   "pageList",
   async (data: any, { rejectWithValue }) => {
-    console.log(data);
-
+    const PageData = [];
     try {
       const Responese = await axios.get(
         `${facebook}me/accounts?access_token=${data.accessToken}`
       );
-      Swal.fire(
-        "Page List!",
-        "Your Access Token Generated SuccussFully!",
-        "success"
-      );
-
-      return Responese.data.data;
+      for (const i in Responese.data.data) {
+        const Result = await axios.post(
+          `${facebook}oauth/access_token?`,
+          null,
+          {
+            params: {
+              grant_type: "fb_exchange_token",
+              client_id: 184681667978801,
+              client_secret: "efdf52f029001efb72df382c05344c8c",
+              fb_exchange_token: Responese.data.data[i].access_token,
+            },
+          }
+        );
+        PageData.push({
+          ...Result.data,
+          ["PageName"]: Responese.data.data[i].name,
+          ["PageID"]: Responese.data.data[i].id,
+        });
+      }
+      return PageData;
     } catch (error) {
       return rejectWithValue(error);
     }

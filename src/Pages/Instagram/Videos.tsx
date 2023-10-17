@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GenrateuserID } from '../../Redux/Slice_Posts';
 import { Inputs } from '../../components/Common/Inputs';
 import { Row } from 'react-bootstrap'
 import { Card, Form } from 'antd';
@@ -44,10 +43,6 @@ const Videos = () => {
                         <Form.Item className='d-block w-100'>
                             <ButtonCreative title="Upload Video" type='submit' />
                         </Form.Item>
-                        <div className='text-white'>
-                            Don't have a user ID, Click here & Copy
-                            <button type="button" onClick={(e) => dispatch(GenrateuserID())} className="btn btn-link m-0 p-0">Link</button>
-                        </div>
                     </Row>
                 </Form>
             </Card>

@@ -6,29 +6,31 @@ import { Card, Form } from 'antd';
 import { ButtonCreative, ButtonFB } from '../../components/Common/Button'
 import { ExtendToken, pageList } from '../../Redux/actions';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { PageSave } from '../../Redux/Slice_Posts';
 
 
 const AccessToken = () => {
     const [page, setPage] = useState<any>([]);
-    const [pageID, setPageID] = useState<any>('');
+    const [pageID, setPageID] = useState('');
     const dispatch = useDispatch<any>()
+
+
+
+
     const handlesPages = async () => {
         const Pages = localStorage.getItem('Pages')
         setPage(Pages ? JSON.parse(Pages) : [])
     }
     const handleSuccess = async (response: any) => {
-
         await dispatch(pageList(response.authResponse))
         await handlesPages()
     }
-    const onFinish = () => {
-        const value = {
-            ['pageID']: pageID.id, ['access_token']: pageID.access_token,
-            ['Client_ID']: 184681667978801, ['Client_Secret_Code']: 'efdf52f029001efb72df382c05344c8c'
-        }
+    const onFinish = (e: any) => {
+        const Pagenam = e.target.value.PageName
+        setPageID(Pagenam)
+        dispatch(PageSave(e.target.value))
 
-        dispatch(ExtendToken(value))
-    };
+    }
     useEffect(() => {
         handlesPages()
     }, [])
@@ -48,25 +50,23 @@ const AccessToken = () => {
                         <Select
                             labelId="demo-simple-select-standard-label"
                             id="demo-simple-select-standard"
-                            value={pageID}
-                            onChange={(e) => setPageID(e.target.value)}
+                            onChange={onFinish}
                             label="Pages"
+                            defaultValue={pageID || ''}
                         >
                             <MenuItem value="">
                                 <em>None</em>
                             </MenuItem>
                             {
                                 page.map((i: any) => ([
-                                    <MenuItem value={i}>{i.name}</MenuItem>
+                                    <MenuItem value={i}>{i.PageName}</MenuItem>
                                 ]))
-
                             }
                         </Select>
                     </FormControl>
-                    {/* <Inputs class="col-12 " holder="Page ID" nam="Page_ID" typs="number" /> */}
-                    <Form.Item className='d-block w-100'>
+                    {/* <Form.Item className='d-block w-100'>
                         <ButtonCreative title="Genrate" class='' type='button' click={onFinish} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <div className='col-12'>
                         <ButtonFB handleSuccess={handleSuccess} />
                     </div>

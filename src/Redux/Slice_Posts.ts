@@ -5,7 +5,6 @@ import {
   FacebookVideosPost,
   InstaPostImage,
   InstaPostVideo,
-  InstagramPageID,
   QuotesGenerate,
   pageList,
 } from "./actions";
@@ -32,8 +31,8 @@ const userSlice: any = createSlice({
     PostVideosFB: (state, action) => {
       FacebookVideosPost(state, action);
     },
-    GenrateuserID: (state) => {
-      InstagramPageID(state);
+    PageSave: (state, action) => {
+      state.UserData = [action.payload];
     },
   },
 
@@ -44,7 +43,8 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(ExtendToken.fulfilled, (state, action) => {
-        state.UserData = [action.payload];
+        // state.UserData.push(action.payload);
+        localStorage.setItem("PagesID", JSON.stringify([action.payload]));
         state.error = null;
         state.loading = false;
       })
@@ -96,7 +96,6 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(pageList.fulfilled, (state, action) => {
-        // state.UserData.push({ ["Pages"]: action.payload });
         localStorage.setItem("Pages", JSON.stringify(action.payload));
         state.error = null;
         state.loading = false;
@@ -108,5 +107,5 @@ const userSlice: any = createSlice({
   },
 });
 
-export const { PostImageFB, PostVideosFB, GenrateuserID } = userSlice.actions;
+export const { PostImageFB, PostVideosFB, PageSave } = userSlice.actions;
 export default userSlice.reducer;
