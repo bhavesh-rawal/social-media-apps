@@ -94,11 +94,13 @@ button:hover {
 
 .css-l4u8b9-MuiInputBase-root-MuiInput-root::before,
 .css-12rx5qu::before,
-.css-m5hdmq-MuiInputBase-root-MuiInput-root-MuiSelect-root:before {
+.css-m5hdmq-MuiInputBase-root-MuiInput-root-MuiSelect-root:before,
+.css-o3ukdw::before {
     border-bottom: 1px solid rgb(255 252 252 / 38%) !important;
 }
 
-.css-12rx5qu::before:hover {
+.css-12rx5qu::before:hover,
+.css-o3ukdw::before:hover {
     border-bottom: 1px solid rgba(255, 252, 252, 0.576) !important;
 
 }
@@ -107,7 +109,8 @@ button:hover {
     background-color: transparent !important;
 }
 
-.css-m5hdmq-MuiInputBase-root-MuiInput-root-MuiSelect-root {
+.css-m5hdmq-MuiInputBase-root-MuiInput-root-MuiSelect-root,
+.css-o3ukdw {
     color: #fff !important;
 
 }
