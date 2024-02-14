@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { facebook, ninja } from "../services/api";
+import { facebook } from "../services/api";
 
 export const ExtendToken = createAsyncThunk(
   "extentToken",
@@ -101,7 +101,7 @@ export const InstaPostVideo = createAsyncThunk(
       const uploadResponse = await axios.post(
         `${facebook}${IG_user.data.instagram_business_account.id}/media?`,
         {
-          media_type: "VIDEO",
+          media_type: "REELS",
           video_url: response.data.secure_url,
           caption: data.Caption,
           access_token: data[0].access_token,
@@ -120,33 +120,6 @@ export const InstaPostVideo = createAsyncThunk(
       return publishResponse.data;
     } catch (error) {
       return rejectWithValue(error);
-    }
-  }
-);
-
-export const QuotesGenerate = createAsyncThunk(
-  "QuotesGenerate",
-  async (chat: any, { rejectWithValue }) => {
-    try {
-      const Response = await axios.post(
-        "https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText?key=AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY",
-        {
-          prompt: { text: chat },
-        }
-      );
-      if (Response.data.candidates) {
-        return {
-          message: Response.data.candidates[0].output,
-          sender: "ChatGPT",
-        };
-      } else {
-        return {
-          message: `Something else,\nThis text doesn't exist !`,
-          sender: "ChatGPT",
-        };
-      }
-    } catch (error) {
-      console.error("Error:", error);
     }
   }
 );
@@ -230,6 +203,32 @@ export const pageList = createAsyncThunk(
       return PageData;
     } catch (error) {
       return rejectWithValue(error);
+    }
+  }
+);
+export const QuotesGenerate = createAsyncThunk(
+  "QuotesGenerate",
+  async (chat: any, { rejectWithValue }) => {
+    try {
+      const Response = await axios.post(
+        "https://generativelanguage.googleapis.com/v1beta3/models/text-bison-001:generateText?key=AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY",
+        {
+          prompt: { text: chat },
+        }
+      );
+      if (Response.data.candidates) {
+        return {
+          message: Response.data.candidates[0].output,
+          sender: "ChatGPT",
+        };
+      } else {
+        return {
+          message: `Something else,\nThis text doesn't exist !`,
+          sender: "ChatGPT",
+        };
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
   }
 );
