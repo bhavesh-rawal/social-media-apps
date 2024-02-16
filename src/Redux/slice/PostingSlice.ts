@@ -5,34 +5,43 @@ import {
   FacebookVideosPost,
   InstaPostImage,
   InstaPostVideo,
-  QuotesGenerate,
   pageList,
-} from "./actions";
+} from "../actions/actions";
+export interface userItem {
+  email: string;
+  password: string;
+}
 
-interface PostState {
-  UserData: any[];
+export interface pageData {
+  access_token: string;
+  token_type: string;
+  PageName: string;
+  PageID: string;
+}
+
+export interface PostState {
+  user?: userItem;
+  pageData?: pageData;
   loading: boolean;
   error: any;
 }
 
 const initialState: PostState = {
-  UserData: [],
+  user: undefined,
+  pageData: undefined,
   loading: false,
   error: null,
 };
 
-const userSlice: any = createSlice({
+const PostingSlice: any = createSlice({
   name: "users",
   initialState,
   reducers: {
-    PostImageFB: (state, action) => {
-      FacebookImgPost(state, action);
-    },
-    PostVideosFB: (state, action) => {
-      FacebookVideosPost(state, action);
+    setUser: (state, action) => {
+      state.user = action.payload;
     },
     PageSave: (state, action) => {
-      state.UserData = [action.payload];
+      state.pageData = action.payload;
     },
   },
 
@@ -43,7 +52,6 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(ExtendToken.fulfilled, (state, action) => {
-        // state.UserData.push(action.payload);
         localStorage.setItem("PagesID", JSON.stringify([action.payload]));
         state.error = null;
         state.loading = false;
@@ -57,11 +65,34 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(InstaPostImage.fulfilled, (state, action) => {
-        // state.UserData.push(action.payload.data)
         state.error = null;
         state.loading = false;
       })
       .addCase(InstaPostImage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(FacebookImgPost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(FacebookImgPost.fulfilled, (state, action) => {
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(FacebookImgPost.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(FacebookVideosPost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(FacebookVideosPost.fulfilled, (state, action) => {
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(FacebookVideosPost.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -70,24 +101,10 @@ const userSlice: any = createSlice({
         state.error = null;
       })
       .addCase(InstaPostVideo.fulfilled, (state, action) => {
-        // state.UserData.push(action.payload.data)
         state.error = null;
         state.loading = false;
       })
       .addCase(InstaPostVideo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(QuotesGenerate.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(QuotesGenerate.fulfilled, (state, action) => {
-        state.UserData = [action.payload];
-        state.error = null;
-        state.loading = false;
-      })
-      .addCase(QuotesGenerate.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
@@ -107,5 +124,5 @@ const userSlice: any = createSlice({
   },
 });
 
-export const { PostImageFB, PostVideosFB, PageSave } = userSlice.actions;
-export default userSlice.reducer;
+export const { setUser, PageSave } = PostingSlice.actions;
+export default PostingSlice.reducer;

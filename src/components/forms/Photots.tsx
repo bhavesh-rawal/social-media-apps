@@ -1,27 +1,28 @@
 import React, { useState } from "react";
 import { Row } from "react-bootstrap";
-import { Inputs } from "../../components/Common/Inputs";
+import { Inputs } from "../common/Inputs";
 import { useDispatch, useSelector } from "react-redux";
-import { PostImageFB } from "../../Redux/Slice_Posts";
 import { Card } from "antd";
-import { ButtonCreative, UploadButton } from "../../components/Common/Button";
-import { InstaPostImage } from "../../Redux/actions";
+import { ButtonCreative, UploadButton } from "../common/Button";
+import { FacebookImgPost, InstaPostImage } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Photots = () => {
   const dispatch = useDispatch<any>();
-  const { UserData } = useSelector((state: any) => state.Post);
+  const { pageData } = useSelector((state: any) => state.Post);
   const [file, setfile] = useState({ name: "" });
   const [caption, setCaption] = useState<any>({ Caption: "" });
-
   const onFinishFB = async () => {
-    const value = { ...caption, file, ...UserData };
-    await dispatch(PostImageFB(value));
-    await dispatch(InstaPostImage(value));
-    await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
-    setfile({ name: "" });
-    setCaption({ Caption: "" });
+    if (pageData) {
+      const value = { ...caption, file, ...pageData };
+      await dispatch(FacebookImgPost(value));
+      await dispatch(InstaPostImage(value));
+      await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
+      setfile({ name: "" });
+      setCaption({ Caption: "" });
+    } else {
+      alert("Please Select Page");
+    }
   };
-
   return (
     <>
       <Card
@@ -32,9 +33,9 @@ const Photots = () => {
       >
         <Row>
           <UploadButton
-            class="col-12 m-3"
-            nam="Image"
-            change={(e: any) => setfile(e.target.files[0])}
+            className="col-12 m-3"
+            name="Image"
+            onChange={(e: any) => setfile(e.target.files[0])}
           />
           <span className="fileName">{file.name}</span>
           <Inputs
@@ -46,11 +47,9 @@ const Photots = () => {
             typs="text"
           />
           <div className="d-block w-100">
-            <ButtonCreative
-              title="Upload Image"
-              click={onFinishFB}
-              type="button"
-            />
+            <ButtonCreative onClick={onFinishFB} type="button">
+              Upload Image
+            </ButtonCreative>
           </div>
         </Row>
       </Card>

@@ -1,27 +1,25 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
-import TopNavbar from "./components/Header/TopNavbar";
+import React, { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import TopNavbar from "./components/header/TopNavbar";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./assets/css/App.css";
-import Facebook from "./Pages/Facebook/Facebook";
-import Instagram from "./Pages/Instagram/Instagram";
-import ChatBot from "./Pages/Chat-Bot/ChatBot";
+import Home from "./pages/Home";
+import "./styles/globle.min.css";
+import SignIn from "./components/auth/SignIn";
 function App() {
+  const navigate = useNavigate();
+  const user = localStorage.getItem("user");
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    } else {
+      navigate("/home");
+    }
+  }, []);
   return (
-    <>
-      <TopNavbar
-        Navs={[
-          { titls: "Facebook & Instagram", nav: "/" },
-          { titls: "Chat Bot", nav: "/ChatBot" },
-        ]}
-      />
-      <Routes>
-        <Route path="/" element={<Facebook />} />
-
-        {/* <Route path='/Instagram' element={<Instagram />} /> */}
-        <Route path="/ChatBot" element={<ChatBot />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="*" element={user ? <Home /> : <SignIn />} />
+      <Route path="/home/*" element={<Home />} />
+    </Routes>
   );
 }
 
