@@ -11,9 +11,8 @@ const AccessToken = () => {
   const [page, setPage] = useState<any>([]);
   const [pageID, setPageID] = useState("");
   const dispatch = useDispatch<any>();
-
   const handlesPages = async () => {
-    const Pages = localStorage.getItem("Pages");
+    const Pages = localStorage.getItem("pageList");
     setPage(Pages ? JSON.parse(Pages) : []);
   };
   const handleSuccess = async (response: any) => {

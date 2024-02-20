@@ -8,12 +8,12 @@ import { FacebookImgPost, InstaPostImage } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Photots = () => {
   const dispatch = useDispatch<any>();
-  const { pageData } = useSelector((state: any) => state.Post);
+  const { selectPage } = useSelector((state: any) => state.Post);
   const [file, setfile] = useState({ name: "" });
   const [caption, setCaption] = useState<any>({ Caption: "" });
   const onFinishFB = async () => {
-    if (pageData) {
-      const value = { ...caption, file, ...pageData };
+    if (selectPage) {
+      const value = { ...caption, file, ...selectPage };
       await dispatch(FacebookImgPost(value));
       await dispatch(InstaPostImage(value));
       await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
@@ -31,7 +31,7 @@ const Photots = () => {
         bordered={false}
         className="card-gradientFB col-4 px-3 pb-4"
       >
-        <Row>
+        <div>
           <UploadButton
             className="col-12 m-3"
             name="Image"
@@ -51,7 +51,7 @@ const Photots = () => {
               Upload Image
             </ButtonCreative>
           </div>
-        </Row>
+        </div>
       </Card>
     </>
   );

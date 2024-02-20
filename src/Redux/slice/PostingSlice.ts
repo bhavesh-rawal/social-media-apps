@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
+  ChatMessage,
   ExtendToken,
   FacebookImgPost,
   FacebookVideosPost,
@@ -7,12 +8,13 @@ import {
   InstaPostVideo,
   pageList,
 } from "../actions/actions";
+import { chatMessage } from "../../types/actions/Posting";
 export interface userItem {
   email: string;
   password: string;
 }
 
-export interface pageData {
+export interface pageItem {
   access_token: string;
   token_type: string;
   PageName: string;
@@ -21,7 +23,9 @@ export interface pageData {
 
 export interface PostState {
   user?: userItem;
-  pageData?: pageData;
+  pageData?: pageItem[];
+  selectPage?: pageItem;
+  chatMessage?: chatMessage[];
   loading: boolean;
   error: any;
 }
@@ -29,6 +33,15 @@ export interface PostState {
 const initialState: PostState = {
   user: undefined,
   pageData: undefined,
+  selectPage: undefined,
+  chatMessage: [
+    {
+      content: "Hi there 👋\nHow can I help you today?",
+      role: "assistant",
+      direction: "incoming",
+      position: "normal",
+    },
+  ],
   loading: false,
   error: null,
 };
@@ -41,7 +54,10 @@ const PostingSlice: any = createSlice({
       state.user = action.payload;
     },
     PageSave: (state, action) => {
-      state.pageData = action.payload;
+      state.selectPage = action.payload;
+    },
+    saveUserMessage: (state, action) => {
+      state.chatMessage?.push(action.payload);
     },
   },
 
@@ -113,16 +129,29 @@ const PostingSlice: any = createSlice({
         state.error = null;
       })
       .addCase(pageList.fulfilled, (state, action) => {
-        localStorage.setItem("Pages", JSON.stringify(action.payload));
+        localStorage.setItem("pageList", JSON.stringify(action.payload));
         state.error = null;
         state.loading = false;
       })
       .addCase(pageList.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(ChatMessage.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(ChatMessage.fulfilled, (state, action) => {
+        state.chatMessage?.push(action.payload);
+        state.error = null;
+        state.loading = false;
+      })
+      .addCase(ChatMessage.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       });
   },
 });
 
-export const { setUser, PageSave } = PostingSlice.actions;
+export const { setUser, PageSave, saveUserMessage } = PostingSlice.actions;
 export default PostingSlice.reducer;

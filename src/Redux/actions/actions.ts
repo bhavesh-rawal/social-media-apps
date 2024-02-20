@@ -1,11 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { facebook } from "../../services/api";
-import { facebookImageDataParams } from "../../types/actions/Posting";
+import { facebook, googlemodel } from "../../services/api";
+import {
+  chatMessage,
+  facebookImageDataParams,
+} from "../../types/actions/Posting";
 
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/Firebase";
+import { MessageDirection } from "@chatscope/chat-ui-kit-react/src/types/unions";
 
 export const ExtendToken = createAsyncThunk(
   "extentToken",
@@ -138,10 +142,7 @@ export const FacebookImgPost = createAsyncThunk(
 export const FacebookVideosPost = createAsyncThunk(
   "FacebookVideosPost",
   async (facebookImageData: facebookImageDataParams, { rejectWithValue }) => {
-    console.log("facebookImageData", facebookImageData);
-
     await axios
-
       .post(
         `${facebook}${facebookImageData.PageID}/videos?`,
         {
@@ -192,6 +193,46 @@ export const pageList = createAsyncThunk(
         });
       }
       return PageData;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const ChatMessage = createAsyncThunk(
+  "chatMessage",
+  async (data: chatMessage, { rejectWithValue }) => {
+    try {
+      console.log("data", data);
+      const API_KEY = "AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY";
+      const response = await axios.post(
+        `${googlemodel}gemini-1.0-pro:generateContent?key=${API_KEY}`,
+        {
+          contents: [
+            {
+              parts: [
+                {
+                  text: data.content,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(
+        "stringify",
+        response.data.candidates[0].content.parts[0].text
+      );
+
+      return {
+        ...response.data.candidates[0].content,
+        content: response.data.candidates[0].content.parts[0].text,
+        direction: "incoming" as MessageDirection,
+      };
     } catch (error) {
       return rejectWithValue(error);
     }

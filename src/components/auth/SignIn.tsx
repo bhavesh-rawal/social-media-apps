@@ -14,7 +14,7 @@ const SignIn = () => {
   const onFinish = (values: userItem) => {
     signInWithEmailAndPassword(auth, values.email, values.password)
       .then((userCredential) => {
-        localStorage.setItem("user", JSON.stringify(userCredential.user));
+        localStorage.setItem("user", JSON.stringify(userCredential.user.email));
         navigate("/home");
       })
       .catch((error) => {
