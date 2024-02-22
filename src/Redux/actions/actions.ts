@@ -3,13 +3,12 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { facebook, googlemodel } from "../../services/api";
 import {
-  chatMessage,
+  PostCaption,
   facebookImageDataParams,
 } from "../../types/actions/Posting";
 
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/Firebase";
-import { MessageDirection } from "@chatscope/chat-ui-kit-react/src/types/unions";
 
 export const ExtendToken = createAsyncThunk(
   "extentToken",
@@ -39,7 +38,7 @@ export const ExtendToken = createAsyncThunk(
 );
 
 export const InstaPostImage = createAsyncThunk(
-  "InstaPostImage",
+  "instaPostImage",
   async (data: facebookImageDataParams, { rejectWithValue }) => {
     try {
       const IG_user = await axios.get(
@@ -75,7 +74,7 @@ export const InstaPostImage = createAsyncThunk(
 );
 
 export const InstaPostVideo = createAsyncThunk(
-  "InstaPostVideo",
+  "instaPostVideo",
   async (data: facebookImageDataParams, { rejectWithValue }) => {
     try {
       const IG_user = await axios.get(
@@ -115,7 +114,7 @@ export const InstaPostVideo = createAsyncThunk(
 );
 
 export const FacebookImgPost = createAsyncThunk(
-  "FacebookImgPost",
+  "facebookImgPost",
   async (facebookImageData: facebookImageDataParams, { rejectWithValue }) => {
     await axios
       .post(
@@ -140,7 +139,7 @@ export const FacebookImgPost = createAsyncThunk(
   }
 );
 export const FacebookVideosPost = createAsyncThunk(
-  "FacebookVideosPost",
+  "facebookVideosPost",
   async (facebookImageData: facebookImageDataParams, { rejectWithValue }) => {
     await axios
       .post(
@@ -198,11 +197,10 @@ export const pageList = createAsyncThunk(
     }
   }
 );
-export const ChatMessage = createAsyncThunk(
-  "chatMessage",
-  async (data: chatMessage, { rejectWithValue }) => {
+export const PostCaptions = createAsyncThunk(
+  "postCaptions",
+  async (data: any, { rejectWithValue }) => {
     try {
-      console.log("data", data);
       const API_KEY = "AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY";
       const response = await axios.post(
         `${googlemodel}gemini-1.0-pro:generateContent?key=${API_KEY}`,
@@ -211,7 +209,7 @@ export const ChatMessage = createAsyncThunk(
             {
               parts: [
                 {
-                  text: data.content,
+                  text: data.Caption,
                 },
               ],
             },
@@ -223,18 +221,44 @@ export const ChatMessage = createAsyncThunk(
           },
         }
       );
-      console.log(
-        "stringify",
-        response.data.candidates[0].content.parts[0].text
-      );
 
       return {
-        ...response.data.candidates[0].content,
-        content: response.data.candidates[0].content.parts[0].text,
-        direction: "incoming" as MessageDirection,
+        Caption: response.data.candidates[0].content.parts[0].text,
       };
     } catch (error) {
       return rejectWithValue(error);
     }
   }
 );
+
+export const postCaptions = async (data: PostCaption) => {
+  try {
+    const API_KEY = "AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY";
+    const rules =
+      "Quote Generate my data without author name and return only one piece of data per response:";
+    const response = await axios.post(
+      `${googlemodel}gemini-1.0-pro:generateContent?key=${API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              {
+                text: `${data.Caption} ${rules}`,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return {
+      Caption: response.data.candidates[0].content.parts[0].text,
+    };
+  } catch (error) {
+    throw error;
+  }
+};

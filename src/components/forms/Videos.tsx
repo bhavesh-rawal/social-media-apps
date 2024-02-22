@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Row } from "react-bootstrap";
 import { Inputs } from "../../components/common/Inputs";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "antd";
@@ -7,6 +6,7 @@ import { ButtonCreative, UploadButton } from "../../components/common/Button";
 import {
   FacebookVideosPost,
   InstaPostVideo,
+  postCaptions,
 } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Videos = () => {
@@ -16,8 +16,10 @@ const Videos = () => {
   const { selectPage } = useSelector((state: any) => state.Post);
 
   const onFinishFB = async () => {
+    let captionsss = await postCaptions(caption);
+    const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
-      const value = { ...caption, file, ...selectPage };
+      const value = { Caption: originalCaption, file, ...selectPage };
       await dispatch(FacebookVideosPost(value));
       await dispatch(InstaPostVideo(value));
       await Swal.fire("Post!", "Your Video Post SuccussFully!", "success");

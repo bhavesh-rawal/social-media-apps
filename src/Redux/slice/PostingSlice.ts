@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  ChatMessage,
+  PostCaptions,
   ExtendToken,
   FacebookImgPost,
   FacebookVideosPost,
@@ -8,7 +8,7 @@ import {
   InstaPostVideo,
   pageList,
 } from "../actions/actions";
-import { chatMessage } from "../../types/actions/Posting";
+import { PostCaption } from "../../types/actions/Posting";
 export interface userItem {
   email: string;
   password: string;
@@ -25,7 +25,7 @@ export interface PostState {
   user?: userItem;
   pageData?: pageItem[];
   selectPage?: pageItem;
-  chatMessage?: chatMessage[];
+  captions?: PostCaption;
   loading: boolean;
   error: any;
 }
@@ -34,14 +34,7 @@ const initialState: PostState = {
   user: undefined,
   pageData: undefined,
   selectPage: undefined,
-  chatMessage: [
-    {
-      content: "Hi there 👋\nHow can I help you today?",
-      role: "assistant",
-      direction: "incoming",
-      position: "normal",
-    },
-  ],
+  captions: undefined,
   loading: false,
   error: null,
 };
@@ -55,9 +48,6 @@ const PostingSlice: any = createSlice({
     },
     PageSave: (state, action) => {
       state.selectPage = action.payload;
-    },
-    saveUserMessage: (state, action) => {
-      state.chatMessage?.push(action.payload);
     },
   },
 
@@ -137,21 +127,21 @@ const PostingSlice: any = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(ChatMessage.pending, (state) => {
+      .addCase(PostCaptions.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(ChatMessage.fulfilled, (state, action) => {
-        state.chatMessage?.push(action.payload);
+      .addCase(PostCaptions.fulfilled, (state, action) => {
+        state.captions = action.payload;
         state.error = null;
         state.loading = false;
       })
-      .addCase(ChatMessage.rejected, (state, action) => {
+      .addCase(PostCaptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });
   },
 });
 
-export const { setUser, PageSave, saveUserMessage } = PostingSlice.actions;
+export const { setUser, PageSave } = PostingSlice.actions;
 export default PostingSlice.reducer;

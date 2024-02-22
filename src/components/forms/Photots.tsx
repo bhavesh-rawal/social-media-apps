@@ -1,19 +1,26 @@
 import React, { useState } from "react";
-import { Row } from "react-bootstrap";
 import { Inputs } from "../common/Inputs";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "antd";
 import { ButtonCreative, UploadButton } from "../common/Button";
-import { FacebookImgPost, InstaPostImage } from "../../redux/actions/actions";
+import {
+  FacebookImgPost,
+  InstaPostImage,
+  PostCaptions,
+  postCaptions,
+} from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Photots = () => {
   const dispatch = useDispatch<any>();
   const { selectPage } = useSelector((state: any) => state.Post);
   const [file, setfile] = useState({ name: "" });
   const [caption, setCaption] = useState<any>({ Caption: "" });
+  const { captions } = useSelector((state: any) => state.Post);
   const onFinishFB = async () => {
+    let captionsss = await postCaptions(caption);
+    const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
-      const value = { ...caption, file, ...selectPage };
+      const value = { Caption: originalCaption, file, ...selectPage };
       await dispatch(FacebookImgPost(value));
       await dispatch(InstaPostImage(value));
       await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
