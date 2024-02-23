@@ -6,25 +6,28 @@ import { ButtonCreative, UploadButton } from "../common/Button";
 import {
   FacebookImgPost,
   InstaPostImage,
-  PostCaptions,
-  postCaptions,
+  postCaptionsGenerate,
+  postImageGenerate,
 } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Photots = () => {
   const dispatch = useDispatch<any>();
   const { selectPage } = useSelector((state: any) => state.Post);
-  const [file, setfile] = useState({ name: "" });
   const [caption, setCaption] = useState<any>({ Caption: "" });
-  const { captions } = useSelector((state: any) => state.Post);
   const onFinishFB = async () => {
-    let captionsss = await postCaptions(caption);
+    let captionsss = await postCaptionsGenerate(caption);
+    let imageURL = await postImageGenerate(caption);
     const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
-      const value = { Caption: originalCaption, file, ...selectPage };
+      const value = {
+        Caption: originalCaption,
+        propmt: caption?.Caption,
+        imgUrl: imageURL,
+        ...selectPage,
+      };
       await dispatch(FacebookImgPost(value));
       await dispatch(InstaPostImage(value));
       await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
-      setfile({ name: "" });
       setCaption({ Caption: "" });
     } else {
       alert("Please Select Page");
@@ -39,15 +42,15 @@ const Photots = () => {
         className="card-gradientFB col-4 px-3 pb-4"
       >
         <div>
-          <UploadButton
+          {/* <UploadButton
             className="col-12 m-3"
             name="Image"
             onChange={(e: any) => setfile(e.target.files[0])}
           />
-          <span className="fileName">{file.name}</span>
+          <span className="fileName">{file.name}</span> */}
           <Inputs
             class="col-12"
-            holder="Caption Photos"
+            holder="Prompt Photos and Caption"
             value={caption.Caption || ""}
             change={(e: any) => setCaption({ [e.target.name]: e.target.value })}
             nam="Caption"

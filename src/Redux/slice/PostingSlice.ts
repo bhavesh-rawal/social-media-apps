@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  PostCaptions,
   ExtendToken,
   FacebookImgPost,
   FacebookVideosPost,
@@ -124,19 +123,6 @@ const PostingSlice: any = createSlice({
         state.loading = false;
       })
       .addCase(pageList.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(PostCaptions.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(PostCaptions.fulfilled, (state, action) => {
-        state.captions = action.payload;
-        state.error = null;
-        state.loading = false;
-      })
-      .addCase(PostCaptions.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

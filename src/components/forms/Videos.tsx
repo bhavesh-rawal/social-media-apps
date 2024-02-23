@@ -6,7 +6,7 @@ import { ButtonCreative, UploadButton } from "../../components/common/Button";
 import {
   FacebookVideosPost,
   InstaPostVideo,
-  postCaptions,
+  postCaptionsGenerate,
 } from "../../redux/actions/actions";
 import Swal from "sweetalert2";
 const Videos = () => {
@@ -16,7 +16,7 @@ const Videos = () => {
   const { selectPage } = useSelector((state: any) => state.Post);
 
   const onFinishFB = async () => {
-    let captionsss = await postCaptions(caption);
+    let captionsss = await postCaptionsGenerate(caption);
     const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
       const value = { Caption: originalCaption, file, ...selectPage };
