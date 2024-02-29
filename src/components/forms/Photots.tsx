@@ -2,33 +2,16 @@ import React, { useState } from "react";
 import { Inputs } from "../common/Inputs";
 import { useDispatch, useSelector } from "react-redux";
 import { Card } from "antd";
-import { ButtonCreative, UploadButton } from "../common/Button";
-import {
-  FacebookImgPost,
-  InstaPostImage,
-  postCaptionsGenerate,
-  postImageGenerate,
-} from "../../redux/actions/actions";
-import Swal from "sweetalert2";
+import { ButtonCreative } from "../common/Button";
+import { setSchedule } from "../../redux/slice/PostingSlice";
 const Photots = () => {
   const dispatch = useDispatch<any>();
   const { selectPage } = useSelector((state: any) => state.Post);
-  const [caption, setCaption] = useState<any>({ Caption: "" });
+  const [prompt, setprompt] = useState<string>("");
   const onFinishFB = async () => {
-    let captionsss = await postCaptionsGenerate(caption);
-    let imageURL = await postImageGenerate(caption);
-    const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
-      const value = {
-        Caption: originalCaption,
-        propmt: caption?.Caption,
-        imgUrl: imageURL,
-        ...selectPage,
-      };
-      await dispatch(FacebookImgPost(value));
-      await dispatch(InstaPostImage(value));
-      await Swal.fire("Post!", "Your Photo Post SuccussFully!", "success");
-      setCaption({ Caption: "" });
+      await dispatch(setSchedule({ prompt, ...selectPage }));
+      setprompt("");
     } else {
       alert("Please Select Page");
     }
@@ -42,23 +25,17 @@ const Photots = () => {
         className="card-gradientFB col-4 px-3 pb-4"
       >
         <div>
-          {/* <UploadButton
-            className="col-12 m-3"
-            name="Image"
-            onChange={(e: any) => setfile(e.target.files[0])}
-          />
-          <span className="fileName">{file.name}</span> */}
           <Inputs
             class="col-12"
-            holder="Prompt Photos and Caption"
-            value={caption.Caption || ""}
-            change={(e: any) => setCaption({ [e.target.name]: e.target.value })}
-            nam="Caption"
+            holder="Which Type Post"
+            value={prompt || ""}
+            change={(e: any) => setprompt(e.target.value)}
+            nam="prompt"
             typs="text"
           />
-          <div className="d-block w-100">
+          <div className="d-block w-100 mt-5">
             <ButtonCreative onClick={onFinishFB} type="button">
-              Upload Image
+              Start Scheduler
             </ButtonCreative>
           </div>
         </div>

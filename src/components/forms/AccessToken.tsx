@@ -5,7 +5,7 @@ import { Card } from "antd";
 import { ButtonFacebookLogin } from "../common/Button";
 import { pageList } from "../../redux/actions/actions";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-import { PageSave } from "../../redux/slice/PostingSlice";
+import { pageSave } from "../../redux/slice/PostingSlice";
 
 const AccessToken = () => {
   const [page, setPage] = useState<any>([]);
@@ -22,7 +22,7 @@ const AccessToken = () => {
   const onFinish = (e: any) => {
     const Pagenam = e.target.value.PageName;
     setPageID(Pagenam);
-    dispatch(PageSave(e.target.value));
+    dispatch(pageSave(e.target.value));
   };
   useEffect(() => {
     handlesPages();
