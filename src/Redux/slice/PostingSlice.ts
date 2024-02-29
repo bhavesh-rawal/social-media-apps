@@ -8,6 +8,8 @@ import {
   pageList,
 } from "../actions/actions";
 import { PostCaption } from "../../types/actions/Posting";
+import { ref, set } from "firebase/database";
+import { database } from "../../firebase/Firebase";
 export interface userItem {
   email: string;
   password: string;
@@ -45,8 +47,13 @@ const PostingSlice: any = createSlice({
     setUser: (state, action) => {
       state.user = action.payload;
     },
-    PageSave: (state, action) => {
+    pageSave: (state, action) => {
       state.selectPage = action.payload;
+    },
+    setSchedule: (state, action) => {
+      set(ref(database, "facebook/pageDeatail"), {
+        ...action.payload,
+      });
     },
   },
 
@@ -129,5 +136,5 @@ const PostingSlice: any = createSlice({
   },
 });
 
-export const { setUser, PageSave } = PostingSlice.actions;
+export const { setUser, pageSave, setSchedule } = PostingSlice.actions;
 export default PostingSlice.reducer;
