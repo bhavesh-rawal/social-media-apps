@@ -11,20 +11,20 @@ import {
 import Swal from "sweetalert2";
 const Videos = () => {
   const [file, setfile] = useState({ name: "" });
-  const [caption, setCaption] = useState<any>({ Caption: "" });
+  const [caption, setCaption] = useState<string>("");
   const dispatch = useDispatch<any>();
   const { selectPage } = useSelector((state: any) => state.Post);
 
   const onFinishFB = async () => {
-    let captionsss = await postCaptionsGenerate(caption);
-    const originalCaption = captionsss.Caption.replace(/[^\w\s]/gi, "");
+    let captionsss = await postCaptionsGenerate({ caption });
+    const originalCaption = captionsss.caption.replace(/[^\w\s]/gi, "");
     if (selectPage) {
-      const value = { Caption: originalCaption, file, ...selectPage };
+      const value = { caption: originalCaption, file, ...selectPage };
       await dispatch(FacebookVideosPost(value));
       await dispatch(InstaPostVideo(value));
       await Swal.fire("Post!", "Your Video Post SuccussFully!", "success");
       setfile({ name: "" });
-      setCaption({ Caption: "" });
+      setCaption("");
     } else {
       alert("Please Select Page");
     }
@@ -48,9 +48,9 @@ const Videos = () => {
           <Inputs
             class="col-12"
             holder="Caption Videos"
-            value={caption.Caption || ""}
-            change={(e: any) => setCaption({ [e.target.name]: e.target.value })}
-            nam="Caption"
+            value={caption || ""}
+            change={(e: any) => setCaption(e.target.value)}
+            nam="caption"
             typs="text"
           />
           <div className="d-block w-100">

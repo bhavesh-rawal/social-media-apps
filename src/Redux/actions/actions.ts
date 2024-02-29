@@ -1,93 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import Swal from "sweetalert2";
-import { facebook, googlemodel, replicate } from "../../services/api";
-import {
-  PostCaption,
-  facebookImageDataParams,
-} from "../../types/actions/Posting";
+import { facebook, googlemodel } from "../../services/api";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/Firebase";
+import { pageItem } from "../../redux/slice/PostingSlice";
 
-export const ExtendToken = createAsyncThunk(
-  "extentToken",
-  async (data: any, { rejectWithValue }) => {
-    try {
-      const Result = await axios.post(`${facebook}oauth/access_token?`, null, {
-        params: {
-          grant_type: "fb_exchange_token",
-          client_id: data.Client_ID,
-          client_secret: data.Client_Secret_Code,
-          fb_exchange_token: data.access_token,
-        },
-      });
-      Swal.fire(
-        "Generated Token!",
-        "Page Access Token Generated SuccussFully!",
-        "success"
-      );
-      return {
-        ["access_token"]: Result.data.access_token,
-        ["Page_ID"]: data.pageID,
-      };
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-export const InstaPostImage = createAsyncThunk(
-  "instaPostImage",
-  async (data: facebookImageDataParams, { rejectWithValue }) => {
-    try {
-      const IG_user = await axios.get(
-        `${facebook}${data.PageID}?fields=instagram_business_account&access_token=${data.access_token}`
-      );
-      const Responese = await axios.post(
-        `${facebook}${IG_user.data.instagram_business_account.id}/media?`,
-        {
-          image_url: data.imgUrl,
-          caption: data.Caption,
-          access_token: data.access_token,
-        }
-      );
+export interface postDataParams extends pageItem {
+  file: any;
+  caption: string;
+}
 
-      const Result = await axios.post(
-        `${facebook}${IG_user.data.instagram_business_account.id}/media_publish?`,
-        {
-          creation_id: Responese.data.id,
-          access_token: data.access_token,
-        }
-      );
-      return Result.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
-export const FacebookImgPost = createAsyncThunk(
-  "facebookImgPost",
-  async (facebookImageData: facebookImageDataParams, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(
-        `${facebook}${facebookImageData?.PageID}/photos`,
-        {
-          message: facebookImageData.Caption,
-          url: facebookImageData.imgUrl,
-          access_token: facebookImageData?.access_token,
-        },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("facebookImageData", response.data);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error);
-    }
-  }
-);
 export const pageList = createAsyncThunk(
   "pageList",
   async (data: any, { rejectWithValue }) => {
@@ -123,12 +45,12 @@ export const pageList = createAsyncThunk(
 );
 export const FacebookVideosPost = createAsyncThunk(
   "facebookVideosPost",
-  async (facebookImageData: facebookImageDataParams, { rejectWithValue }) => {
+  async (facebookImageData: postDataParams, { rejectWithValue }) => {
     await axios
       .post(
         `${facebook}${facebookImageData.PageID}/videos?`,
         {
-          description: facebookImageData.Caption,
+          description: facebookImageData.caption,
           source: facebookImageData.file,
           access_token: facebookImageData.access_token,
           file_size: 22420886,
@@ -149,7 +71,7 @@ export const FacebookVideosPost = createAsyncThunk(
 );
 export const InstaPostVideo = createAsyncThunk(
   "instaPostVideo",
-  async (data: facebookImageDataParams, { rejectWithValue }) => {
+  async (data: postDataParams, { rejectWithValue }) => {
     try {
       const IG_user = await axios.get(
         `${facebook}${data.PageID}?fields=instagram_business_account&access_token=${data.access_token}`
@@ -165,7 +87,7 @@ export const InstaPostVideo = createAsyncThunk(
           {
             media_type: "REELS",
             video_url: url,
-            caption: data.Caption,
+            caption: data.caption,
             access_token: data.access_token,
           }
         );
@@ -186,7 +108,7 @@ export const InstaPostVideo = createAsyncThunk(
     }
   }
 );
-export const postCaptionsGenerate = async (data: PostCaption) => {
+export const postCaptionsGenerate = async (data: { caption: string }) => {
   try {
     const API_KEY = "AIzaSyBjctYmA81FbTuUWV23fd5SkZPqQnHWnjY";
     const rules =
@@ -198,7 +120,7 @@ export const postCaptionsGenerate = async (data: PostCaption) => {
           {
             parts: [
               {
-                text: `${data.Caption} ${rules}`,
+                text: `${data.caption} ${rules}`,
               },
             ],
           },
@@ -211,39 +133,8 @@ export const postCaptionsGenerate = async (data: PostCaption) => {
       }
     );
     return {
-      Caption: response.data.candidates[0].content.parts[0].text,
+      caption: response.data.candidates[0].content.parts[0].text,
     };
-  } catch (error) {
-    throw error;
-  }
-};
-export const postImageGenerate = async (data: PostCaption) => {
-  try {
-    const responseImage = await axios.post(
-      `https://cors-anywhere.herokuapp.com/${replicate}`,
-      {
-        version:
-          "727e49a643e999d602a896c774a0658ffefea21465756a6ce24b7ea4165eba6a",
-        input: {
-          prompt: `${data.Caption} Genrate a Image:`,
-        },
-      },
-      {
-        headers: {
-          Authorization: "Token r8_8HQhZkiRbMDmLME01GNqqejuBHf4VlP221Wuy",
-        },
-      }
-    );
-    await new Promise((resolve) => setTimeout(resolve, 10000)); // 10 second
-    const getImage = await axios.get(
-      `https://cors-anywhere.herokuapp.com/${responseImage.data.urls.get}`,
-      {
-        headers: {
-          Authorization: "Token r8_8HQhZkiRbMDmLME01GNqqejuBHf4VlP221Wuy",
-        },
-      }
-    );
-    return getImage.data.output[0];
   } catch (error) {
     throw error;
   }

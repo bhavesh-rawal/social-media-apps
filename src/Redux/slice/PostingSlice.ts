@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  ExtendToken,
-  FacebookImgPost,
   FacebookVideosPost,
-  InstaPostImage,
   InstaPostVideo,
   pageList,
 } from "../actions/actions";
-import { PostCaption } from "../../types/actions/Posting";
 import { ref, set } from "firebase/database";
 import { database } from "../../firebase/Firebase";
 export interface userItem {
@@ -26,7 +22,6 @@ export interface PostState {
   user?: userItem;
   pageData?: pageItem[];
   selectPage?: pageItem;
-  captions?: PostCaption;
   loading: boolean;
   error: any;
 }
@@ -35,7 +30,6 @@ const initialState: PostState = {
   user: undefined,
   pageData: undefined,
   selectPage: undefined,
-  captions: undefined,
   loading: false,
   error: null,
 };
@@ -59,43 +53,6 @@ const PostingSlice: any = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(ExtendToken.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(ExtendToken.fulfilled, (state, action) => {
-        localStorage.setItem("PagesID", JSON.stringify([action.payload]));
-        state.error = null;
-        state.loading = false;
-      })
-      .addCase(ExtendToken.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(InstaPostImage.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(InstaPostImage.fulfilled, (state, action) => {
-        state.error = null;
-        state.loading = false;
-      })
-      .addCase(InstaPostImage.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(FacebookImgPost.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(FacebookImgPost.fulfilled, (state, action) => {
-        state.error = null;
-        state.loading = false;
-      })
-      .addCase(FacebookImgPost.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
       .addCase(FacebookVideosPost.pending, (state) => {
         state.loading = true;
         state.error = null;
